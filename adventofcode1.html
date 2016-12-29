@@ -23,27 +23,92 @@
 		var direction = "N";
 		var x = 0;
 		var y = 0;
+		var xStep = 0;
+		var yStep = 0;
+
+		var lastSteps = [];
+		lastSteps.push(xStep + "." + yStep);
+		console.log(lastSteps);
+	
+
 		for (var i = 0; i < coordinates.length - 1; i++) {
+			
 			if ((coordinates[i].charAt(0) == "R" && direction == "N") || 
 					(coordinates[i].charAt(0) == "L" && direction == "S")) {
 				direction = "E";
-				x = x + parseInt(coordinates[i].slice(1));
+			
+				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
+					xStep = x + j;
+
+					lastSteps.forEach(function(item, i,arr) {
+						if (item[i] == xStep + "." + yStep) {
+							alert(xStep + "." + yStep);
+						}
+						
+					});
+
+					lastSteps.push(xStep + "." + yStep);
+				}
+
+				x = xStep;
+			
 			} else if ((coordinates[i].charAt(0) == "L" && direction == "N") || 
 					(coordinates[i].charAt(0) == "R" && direction == "S")) {
 				direction = "W";
-				x = x - parseInt(coordinates[i].slice(1));
+				
+				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
+					xStep = x - j;
+
+					lastSteps.forEach(function(item, i, arr) {
+						if (item[i] == xStep + "." + yStep) {
+							alert(xStep + "." + yStep);
+						}
+					});
+					
+					lastSteps.push(xStep + "." + yStep);
+				}
+
+				x = xStep;
+
 			} else if ((coordinates[i].charAt(0) == "L" && direction == "E") || 
 					(coordinates[i].charAt(0) == "R" && direction == "W")) {
 				direction = "N";
-				y = y + parseInt(coordinates[i].slice(1));
+				
+				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
+					yStep = y + j;
+
+					lastSteps.forEach(function(item, i, arr) {
+						if (item[i] == xStep + "." + yStep) {
+							alert(xStep + "." + yStep);
+						}
+					});
+					
+					lastSteps.push(xStep + "." + yStep);
+				}
+
+				y = yStep;
+
 			} else if ((coordinates[i].charAt(0) == "L" && direction == "W") || 
 					(coordinates[i].charAt(0) == "R" && direction == "E")) {
 				direction = "S";
-				y = y - parseInt(coordinates[i].slice(1));
+				
+				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
+					yStep = y - j;
+
+					lastSteps.forEach(function(item, i, arr) {
+						if (item[i] == xStep + "." + yStep) {
+							alert(xStep + "." + yStep);
+						}
+					});
+					
+					lastSteps.push(xStep + "." + yStep);
+				}
+
+				y = yStep;
 			}
 		};
 		alert(x + ", " + y);
-
+		
 	</script>
 </body>
 </html>
