@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+<body>
+	<script>
+		var buttons = [];
+		var instructions = `LLLRLLULLDDLDUDRDDURLDDRDLRDDRUULRULLLDLUURUUUDLUUDLRUDLDUDURRLDRRRUULUURLUDRURULRLRLRRUULRUUUDRRDDRLLLDDLLUDDDLLRLLULULRRURRRLDRLDLLRURDULLDULRUURLRUDRURLRRDLLDDURLDDLUDLRLUURDRDRDDUURDDLDDDRUDULDLRDRDDURDLUDDDRUDLUDLULULRUURLRUUUDDRLDULLLUDLULDUUDLDLRRLLLRLDUDRUULDLDRDLRRDLDLULUUDRRUDDDRDLRLDLRDUDRULDRDURRUULLUDURURUUDRDRLRRDRRDRDDDDLLRURULDURDLUDLUULDDLLLDULUUUULDUDRDURLURDLDDLDDUULRLUUDLDRUDRURURRDDLURURDRLRLUUUURLLRR
+UUUUURRRURLLRRDRLLDUUUUDDDRLRRDRUULDUURURDRLLRRRDRLLUDURUDLDURURRLUDLLLDRDUDRDRLDRUDUDDUULLUULLDUDUDDRDUUUDLULUDUULLUUULURRUDUULDUDDRDURRLDDURLRDLULDDRUDUDRDULLRLRLLUUDDURLUUDLRUUDDLLRUURDUDLLDRURLDURDLRDUUDLRLLRLRURRUDRRLRDRURRRUULLUDLDURDLDDDUUDRUUUDULLLRDRRDRLURDDRUUUDRRUUDLUDDDRRRRRLRLDLLDDLRDURRURLLLULURULLULRLLDDLDRLDULLDLDDDRLUDDDUDUDRRLRDLLDULULRLRURDLUDDLRUDRLUURRURDURDRRDRULUDURRLULUURDRLDLRUDLUDRURLUDUUULRRLRRRULRRRLRLRLULULDRUUDLRLLRLLLURUUDLUDLRURUDRRLDLLULUDRUDRLLLRLLDLLDUDRRURRLDLUUUURDDDUURLLRRDRUUURRRDRUDLLULDLLDLUDRRDLLDDLDURLLDLLDLLLDR
+LRDULUUUDLRUUUDURUUULLURDRURDRRDDDLRLRUULDLRRUDDLLUURLDRLLRUULLUDLUDUDRDRDLUUDULLLLRDDUDRRRURLRDDLRLDRLULLLRUUULURDDLLLLRURUUDDDLDUDDDDLLLURLUUUURLRUDRRLLLUUULRDUURDLRDDDUDLLRDULURURUULUDLLRRURDLUULUUDULLUDUUDURLRULRLLDLUULLRRUDDULRULDURRLRRLULLLRRDLLDDLDUDDDUDLRUURUDUUUDDLRRDLRUDRLLRDRDLURRLUDUULDRRUDRRUDLLLLRURRRRRUULULLLRDRDUDRDDURDLDDUURRURLDRRUDLRLLRRURULUUDDDLLLRDRLULLDLDDULDLUUDRURULLDLLLLDRLRRLURLRULRDLLULUDRDR
+RURRRUDLURRURLURDDRULLDRDRDRRULRRDLDDLDUUURUULLRRDRLDRRDRULLURRRULLLDULDDDDLULRUULRURUDURDUDRLRULLLRDURDDUDDRDLURRURUURDLDDDDDURURRURLLLDDLDRRDUDDLLLDRRLDDUUULDLLDRUURUDDRRLDUULRRDDUDRUULRLDLRLRUURLLDRDLDRLURULDLULDRULURLLRRLLDDDURLRUURUULULRLLLULUDULUUULDRURUDDDUUDDRDUDUDRDLLLRDULRLDLRRDRRLRDLDDULULRLRUUDDUDRRLUDRDUUUDRLLLRRLRUDRRLRUUDDLDURLDRRRUDRRDUDDLRDDLULLDLURLUUDLUDLUDLDRRLRRRULDRLRDUURLUULRDURUDUUDDURDDLRRRLUUUDURULRURLDRURULDDUDDLUDLDLURDDRRDDUDUUURLDLRDDLDULDULDDDLDRDDLUURDULLUDRRRULRLDDLRDRLRURLULLLDULLUUDURLDDULRRDDUULDRLDLULRRDULUDUUURUURDDDRULRLRDLRRURR
+UDDDRLDRDULDRLRDUDDLDLLDDLUUURDDDLUDRDUDLDURLUURUDUULUUULDUURLULLRLUDLLURUUUULRLRLLLRRLULLDRUULURRLLUDUDURULLLRRRRLRUULLRDRDRRDDLUDRRUULUDRUULRDLRDRRLRRDRRRLULRULUURRRULLRRRURUDUURRLLDDDUDDULUULRURUDUDUDRLDLUULUDDLLLLDRLLRLDULLLRLLDLUUDURDLLRURUUDDDDLLUDDRLUUDUDRDRLLURURLURRDLDDDULUURURURRLUUDUDLDLDDULLURUDLRLDLRLDLDUDULURDUDRLURRRULLDDDRDRURDDLDLULUDRUULDLULRDUUURLULDRRULLUDLDRLRDDUDURRRURRLRDUULURUUDLULDLRUUULUDRDRRUDUDULLDDRLRDLURDLRLUURDRUDRDRUDLULRUDDRDLLLRLURRURRLDDDUDDLRDRRRULLUUDULURDLDRDDDLDURRLRRDLLDDLULULRRDUDUUDUULRDRRDURDDDDUUDDLUDDUULDRDDULLUUUURRRUUURRULDRRDURRLULLDU
+`;
+		
+		var target = "\n"; // цель поиска
+		var pos = 0;
+		
+
+		for (i = 0; i <= instructions.length; i++) {
+			
+			var foundPos = instructions.indexOf(target, pos);
+			buttons.push(instructions.slice(pos, foundPos));
+			pos = foundPos + 1; // продолжить поиск со следующей
+			
+		}
+
+		
+
+		var button1 = buttons[0];
+		var button2 = buttons[1];
+		var button3 = buttons[2];
+		var button4 = buttons[3];
+		var button5 = buttons[4];
+
+		alert(button1);
+		alert(button2);
+		alert(button3);
+		alert(button4);
+		alert(button5);
+
+
+
+		alert(getCoordinate(button1));
+		alert(getCoordinate(button2));
+		alert(getCoordinate(button3));
+		alert(getCoordinate(button4));
+		alert(getCoordinate(button5));
+
+
+
+		function getCoordinate(button) {
+			var start = 5;
+			
+			for (i = 0; i < button.length; i++) {
+				console.log(button.length);				
+				if (start == 5) {
+
+					if (button[i] == "U") {
+						start = 2;
+					} else if (button[i] == "D") {
+						start = 8;
+					} else if (button[i] == "L") {
+						start = 4;
+					} else if (button[i] == "R") {
+						start = 6;
+					}
+
+					console.log(start);
+
+				} else if (start == 1) {
+
+					if (button[i] == "D") {
+						start = 4;
+					} else if (button[i] == "R") {
+						start = 2;
+					} else {
+						start = 1;
+					}
+					console.log(start);
+
+				} else if (start == 2) {
+
+					if (button[i] == "D") {
+						start = 5;
+					} else if (button[i] == "R") {
+						start = 3;
+					} else if (button[i] == "L") {
+						start = 1;
+					} else {
+						start = 2;
+					}
+					console.log(start);
+
+				} else if (start == 3) {
+
+					if (button[i] == "D") {
+						start = 6;
+					} else if (button[i] == "L") {
+						start = 2;
+					} else {
+						start = 3;
+					}
+					console.log(start);
+
+				} else if (start == 4) {
+
+					if (button[i] == "D") {
+						start = 7;
+					} else if (button[i] == "R") {
+						start = 5;
+					} else if (button[i] == "U") {
+						start = 1;
+					} else {
+						start = 4;
+					}
+					console.log(start);
+
+				} else if (start == 6) {
+
+					if (button[i] == "D") {
+						start = 9;
+					} else if (button[i] == "U") {
+						start = 3;
+					} else if (button[i] == "L") {
+						start = 5;
+					} else {
+						start = 6;
+					}
+					console.log(start);
+
+				} else if (start == 7) {
+
+					if (button[i] == "U") {
+						start = 4;
+					} else if (button[i] == "R") {
+						start = 8;
+					} else {
+						start = 7;
+					}
+					console.log(start);
+
+				} else if (start == 8) {
+
+					if (button[i] == "U") {
+						start = 5;
+					} else if (button[i] == "R") {
+						start = 9;
+					} else if (button[i] == "L") {
+						start = 7;
+					} else {
+						start = 8;
+					}
+					console.log(start);
+
+
+				} else if (start == 9) {
+
+					if (button[i] == "U") {
+						start = 6;
+					} else if (button[i] == "L") {
+						start = 8;
+					} else {
+						start = 9;
+					}
+					console.log(start);
+				}
+			}
+			
+			return start;
+		}
+
+	</script>
+</body>
+</html>
