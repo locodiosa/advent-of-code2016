@@ -5,11 +5,52 @@
 </head>
 <body>
 	<script>
-		var coordinates = [];
-		var str = "R1, R1, R3, R1, R1, L2, R5, L2, R5, R1, R4, L2, R3, L3, R4, L5, R4, R4, R1, L5, L4, R5, R3, L1, R4, R3, L2, L1, R3, L4, R3, L2, R5, R190, R3, R5, L5, L1, R54, L3, L4, L1, R4, R1, R3, L1, L1, R2, L2, R2, R5, L3, R4, R76, L3, R4, R191, R5, R5, L5, L4, L5, L3, R1, R3, R2, L2, L2, L4, L5, L4, R5, R4, R4, R2, R3, R4, L3, L2, R5, R3, L2, L1, R2, L3, R2, L1, L1, R1, L3, R5, L5, L1, L2, R5, R3, L3, R3, R5, R2, R5, R5, L5, L5, R2, L3, L5, L2, L1, R2, R2, L2, R2, L3, L2, R3, L5, R4, L4, L5, R3, L4, R1, R3, R2, R4, L2, L3, R2, L5, R5, R4, L2, R4, L1, L3, L1, L3, R1, R2, R1, L5, R5, R3, L3, L3, L2, R4, R2, L5, L1, L1, L5, L4, L1, L1, R1";
+		var coordinates = "R1, R1, R3, R1, R1, L2, R5, L2, R5, R1, R4, L2, R3, L3, R4, L5, R4, R4, R1, L5, L4, R5, R3, L1, R4, R3, L2, L1, R3, L4, R3, L2, R5, R190, R3, R5, L5, L1, R54, L3, L4, L1, R4, R1, R3, L1, L1, R2, L2, R2, R5, L3, R4, R76, L3, R4, R191, R5, R5, L5, L4, L5, L3, R1, R3, R2, L2, L2, L4, L5, L4, R5, R4, R4, R2, R3, R4, L3, L2, R5, R3, L2, L1, R2, L3, R2, L1, L1, R1, L3, R5, L5, L1, L2, R5, R3, L3, R3, R5, R2, R5, R5, L5, L5, R2, L3, L5, L2, L1, R2, R2, L2, R2, L3, L2, R3, L5, R4, L4, L5, R3, L4, R1, R3, R2, R4, L2, L3, R2, L5, R5, R4, L2, R4, L1, L3, L1, L3, R1, R2, R1, L5, R5, R3, L3, L3, L2, R4, R2, L5, L1, L1, L5, L4, L1, L1, R1";
+
+		var direction = 0;
+		var x = 0;
+		var y = 0;
+
+		coordinates.split(", ").forEach(function(cmd) {
+			if (cmd[0] == "R") {
+				++direction;
+			} else if (cmd[0] == "L") {
+				--direction;
+			}
+
+			if (direction < 0) {
+				direction += 4;
+			}
+			if (direction > 3) {
+				direction -= 4;
+			}
+
+			changeCoordinates(direction);
+
+			function changeCoordinates(direction) {
+				var distance = parseInt(cmd.slice(1), 10)
+				switch (direction) {
+					case 0:
+						y += distance;
+						break;
+					case 1:
+						x += distance;
+						break;
+					case 2:
+						y -= distance;
+						break;
+					case 3:
+						x -= distance;
+						break;
+				}
+			}
+			
+		});
+		
+		alert(Math.abs(x) + Math.abs(y));
 
 
-		var target = ","; // цель поиска
+		/*var target = ","; // цель поиска
 
 		var pos = 0;
 
@@ -40,7 +81,7 @@
 				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
 					xStep = x + j;
 
-					lastSteps.forEach(function(item, i,arr) {
+					lastSteps.forEach(function(item, i, arr) {
 						if (item[i] == xStep + "." + yStep) {
 							alert(xStep + "." + yStep);
 						}
@@ -107,7 +148,7 @@
 				y = yStep;
 			}
 		};
-		alert(x + ", " + y);
+		alert(x + ", " + y);*/
 		
 	</script>
 </body>
