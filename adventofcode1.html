@@ -25,29 +25,83 @@
 				direction -= 4;
 			}
 
-			changeCoordinates(direction);
-
-			function changeCoordinates(direction) {
-				var distance = parseInt(cmd.slice(1), 10)
-				switch (direction) {
-					case 0:
-						y += distance;
-						break;
-					case 1:
-						x += distance;
-						break;
-					case 2:
-						y -= distance;
-						break;
-					case 3:
-						x -= distance;
-						break;
-				}
-			}
-			
+			changeCoordinates(direction, cmd);
 		});
 		
 		alert(Math.abs(x) + Math.abs(y));
+
+		function changeCoordinates(direction, cmd) {
+			var distance = parseInt(cmd.slice(1), 10)
+			var lastSteps = [];
+			lastSteps.push(x + "." + y);
+
+			switch (direction) {
+				case 0:
+					for (var j = 1; j <= distance; j++) {
+						++y;
+
+						lastSteps.forEach(function(item, i) {
+							if (item[i] == x + "." + y) {
+								alert(x + "." + y);
+							}
+						});
+
+						lastSteps.push(x + "." + y);
+						console.log(lastSteps);
+					}
+
+					break;
+
+				case 1:
+
+					for (var j = 1; j <= distance; j++) {
+						++x;
+
+						lastSteps.forEach(function(item, i) {
+							if (item[i] == x + "." + y) {
+								alert(x + "." + y);
+							}
+						});
+
+						lastSteps.push(x + "." + y);
+						console.log(lastSteps);
+					}
+
+					break;
+
+				case 2:
+					for (var j = 1; j <= distance; j++) {
+						--y;
+
+						lastSteps.forEach(function(item, i) {
+							if (item[i] == x + "." + y) {
+								alert(x + "." + y);
+							}
+						});
+
+						lastSteps.push(x + "." + y);
+						console.log(lastSteps);
+					}
+
+					break;
+
+				case 3:
+					for (var j = 1; j <= distance; j++) {
+						--x;
+
+						lastSteps.forEach(function(item, i) {
+							if (item[i] == x + "." + y) {
+								alert(x + "." + y);
+							}
+						});
+
+						lastSteps.push(x + "." + y);
+						console.log(lastSteps);
+					}
+
+					break;
+				}
+			}
 
 
 		/*var target = ","; // цель поиска
