@@ -10,6 +10,10 @@
 		var direction = 0;
 		var x = 0;
 		var y = 0;
+		var lastSteps = [];
+		var firstCross = 0;
+
+		lastSteps[x + "." + y] = 1;
 
 		coordinates.split(", ").forEach(function(cmd) {
 			if (cmd[0] == "R") {
@@ -28,181 +32,31 @@
 			changeCoordinates(direction, cmd);
 		});
 		
-		alert(Math.abs(x) + Math.abs(y));
+		alert(Math.abs(x) + Math.abs(y) + ", " + firstCross);
+
 
 		function changeCoordinates(direction, cmd) {
+			var moves = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 			var distance = parseInt(cmd.slice(1), 10)
-			var lastSteps = [];
-			lastSteps.push(x + "." + y);
-
-			switch (direction) {
-				case 0:
-					for (var j = 1; j <= distance; j++) {
-						++y;
-
-						lastSteps.forEach(function(item, i) {
-							if (item[i] == x + "." + y) {
-								alert(x + "." + y);
-							}
-						});
-
-						lastSteps.push(x + "." + y);
-						console.log(lastSteps);
-					}
-
-					break;
-
-				case 1:
-
-					for (var j = 1; j <= distance; j++) {
-						++x;
-
-						lastSteps.forEach(function(item, i) {
-							if (item[i] == x + "." + y) {
-								alert(x + "." + y);
-							}
-						});
-
-						lastSteps.push(x + "." + y);
-						console.log(lastSteps);
-					}
-
-					break;
-
-				case 2:
-					for (var j = 1; j <= distance; j++) {
-						--y;
-
-						lastSteps.forEach(function(item, i) {
-							if (item[i] == x + "." + y) {
-								alert(x + "." + y);
-							}
-						});
-
-						lastSteps.push(x + "." + y);
-						console.log(lastSteps);
-					}
-
-					break;
-
-				case 3:
-					for (var j = 1; j <= distance; j++) {
-						--x;
-
-						lastSteps.forEach(function(item, i) {
-							if (item[i] == x + "." + y) {
-								alert(x + "." + y);
-							}
-						});
-
-						lastSteps.push(x + "." + y);
-						console.log(lastSteps);
-					}
-
-					break;
-				}
+			
+			for (var j = 1; j <= distance; j++) {
+				x += moves[direction][0];
+				y += moves[direction][1];
+				findSameCoordinate(x, y);
 			}
-
-
-		/*var target = ","; // цель поиска
-
-		var pos = 0;
-
-		while (true) {
-		  var foundPos = str.indexOf(target, pos);
-		  if (foundPos == -1) break;
-		  coordinates.push(str.slice(pos, foundPos))
-		  pos = foundPos + 2; // продолжить поиск со следующей
 		}
 
-		var direction = "N";
-		var x = 0;
-		var y = 0;
-		var xStep = 0;
-		var yStep = 0;
-
-		var lastSteps = [];
-		lastSteps.push(xStep + "." + yStep);
-		console.log(lastSteps);
-	
-
-		for (var i = 0; i < coordinates.length - 1; i++) {
-			
-			if ((coordinates[i].charAt(0) == "R" && direction == "N") || 
-					(coordinates[i].charAt(0) == "L" && direction == "S")) {
-				direction = "E";
-			
-				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
-					xStep = x + j;
-
-					lastSteps.forEach(function(item, i, arr) {
-						if (item[i] == xStep + "." + yStep) {
-							alert(xStep + "." + yStep);
-						}
-						
-					});
-
-					lastSteps.push(xStep + "." + yStep);
+		function findSameCoordinate(x, y) {
+			var key = x + "." + y;
+			if (lastSteps[key] === undefined) {
+				lastSteps[key] = 1;
+			} else {
+				if (firstCross == 0) {
+					key = key.split(".");
+					firstCross = Math.abs(key[0]) + Math.abs(key[1]);
 				}
-
-				x = xStep;
-			
-			} else if ((coordinates[i].charAt(0) == "L" && direction == "N") || 
-					(coordinates[i].charAt(0) == "R" && direction == "S")) {
-				direction = "W";
-				
-				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
-					xStep = x - j;
-
-					lastSteps.forEach(function(item, i, arr) {
-						if (item[i] == xStep + "." + yStep) {
-							alert(xStep + "." + yStep);
-						}
-					});
-					
-					lastSteps.push(xStep + "." + yStep);
-				}
-
-				x = xStep;
-
-			} else if ((coordinates[i].charAt(0) == "L" && direction == "E") || 
-					(coordinates[i].charAt(0) == "R" && direction == "W")) {
-				direction = "N";
-				
-				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
-					yStep = y + j;
-
-					lastSteps.forEach(function(item, i, arr) {
-						if (item[i] == xStep + "." + yStep) {
-							alert(xStep + "." + yStep);
-						}
-					});
-					
-					lastSteps.push(xStep + "." + yStep);
-				}
-
-				y = yStep;
-
-			} else if ((coordinates[i].charAt(0) == "L" && direction == "W") || 
-					(coordinates[i].charAt(0) == "R" && direction == "E")) {
-				direction = "S";
-				
-				for (var j = 1; j <= parseInt(coordinates[i].slice(1)); j++) {
-					yStep = y - j;
-
-					lastSteps.forEach(function(item, i, arr) {
-						if (item[i] == xStep + "." + yStep) {
-							alert(xStep + "." + yStep);
-						}
-					});
-					
-					lastSteps.push(xStep + "." + yStep);
-				}
-
-				y = yStep;
 			}
-		};
-		alert(x + ", " + y);*/
+		}		
 		
 	</script>
 </body>
