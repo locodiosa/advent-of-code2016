@@ -17,7 +17,6 @@
 		var pos = 0;
 		
 		for (i = 0; i <= instructions.length; i++) {
-			
 			var foundPos = instructions.indexOf(target, pos);
 			buttons.push(instructions.slice(pos, foundPos));
 			pos = foundPos + 1; // продолжить поиск со следующей
