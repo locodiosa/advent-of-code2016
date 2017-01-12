@@ -11,33 +11,42 @@
 
 		function getResult() {
 			var result = 0;
-		
 			input.split("\n").forEach(function(line) {
-				var str = line.split(" ");
-				var triangle = [];
-				
-				for (var i = 0; i < str.length; i++) {
-					if (str[i] != "") {
-						triangle.push(parseInt(str[i]));
-					}
-				}
-
-				var sideLong = Math.max(triangle[0], triangle[1], triangle[2]);
-				var indexSideLong = triangle.indexOf(sideLong);
-				var sumSides = 0;
-				
-				for (i = 0; i < triangle.length; i++) {
-					if (i != indexSideLong) {
-						sumSides += triangle[i];
-					}
-				}
-
-				if (sumSides > sideLong) {
+				if (getSum(getArray(line)) > getSideLong(getArray(line))) {
 					result++;
 				}
 			});
-
+			
 			return result;
+		}
+
+		function getSum(triangle) {
+			var indexSideLong = triangle.indexOf(getSideLong(triangle));
+			var sumSides = 0;
+			
+			for (var i = 0; i < triangle.length; i++) {
+				if (i != indexSideLong) {
+					sumSides += triangle[i];
+				}
+			}
+			return sumSides;
+		}
+
+		function getSideLong(triangle) {
+			var sideLong = Math.max(triangle[0], triangle[1], triangle[2]);
+			return sideLong;
+		}
+
+		function getArray(line) {
+			var str = line.split(" ");
+			var triangle = [];
+				
+			for (var i = 0; i < str.length; i++) {
+				if (str[i] != "") {
+					triangle.push(parseInt(str[i]));
+				}
+			}
+			return triangle;
 		}
 	
 		var input = 
