@@ -10,15 +10,54 @@
 		}
 
 		function getResult() {
-			var result = 0;
+			var result1 = 0;
+			var result2 = 0;
+			var vertikalTriangle0 = [];
+			var vertikalTriangle1 = [];
+			var vertikalTriangle2 = [];
+					
 			input.split("\n").forEach(function(line) {
-				if (getSum(getArray(line)) > getSideLong(getArray(line))) {
-					result++;
+				if (getSum(getTriangle(line)) > getSideLong(getTriangle(line))) {
+					result1++;
+				}
+
+				if (vertikalTriangle0.length < 3) {
+					vertikalTriangle0.push(getTriangle(line)[0])
+				}
+				if (vertikalTriangle0.length == 3) {
+					if (getSum(vertikalTriangle0) > getSideLong(vertikalTriangle0)) {
+						result2++;
+					}
+					vertikalTriangle0 = [];
+				}
+
+
+				if (vertikalTriangle1.length < 3) {
+					vertikalTriangle1.push(getTriangle(line)[1])
+				}
+				if (vertikalTriangle1.length == 3) {
+					if (getSum(vertikalTriangle1) > getSideLong(vertikalTriangle1)) {
+						result2++;
+					}
+					vertikalTriangle1 = [];
+				}
+
+				if (vertikalTriangle2.length < 3) {
+					vertikalTriangle2.push(getTriangle(line)[2])
+				}
+				if (vertikalTriangle2.length == 3) {
+					if (getSum(vertikalTriangle2) > getSideLong(vertikalTriangle2)) {
+						result2++;
+					}
+					vertikalTriangle2 = [];
 				}
 			});
-			
+
+			var result = result1 + ", " + result2;
+
 			return result;
 		}
+
 
 		function getSum(triangle) {
 			var indexSideLong = triangle.indexOf(getSideLong(triangle));
@@ -29,15 +68,19 @@
 					sumSides += triangle[i];
 				}
 			}
+
 			return sumSides;
 		}
 
+
 		function getSideLong(triangle) {
 			var sideLong = Math.max(triangle[0], triangle[1], triangle[2]);
+			
 			return sideLong;
 		}
 
-		function getArray(line) {
+
+		function getTriangle(line) {
 			var str = line.split(" ");
 			var triangle = [];
 				
@@ -46,9 +89,11 @@
 					triangle.push(parseInt(str[i]));
 				}
 			}
+
 			return triangle;
 		}
-	
+
+		
 		var input = 
  `785  516  744
   272  511  358
