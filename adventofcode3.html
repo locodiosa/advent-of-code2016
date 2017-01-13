@@ -5,6 +5,8 @@
 	<script>
 		"use strict";
 
+		var arraySides = [];
+
 		function calc() {
 			document.getElementById("result").innerHTML = getResult();
 		}
@@ -12,88 +14,77 @@
 		function getResult() {
 			var result1 = 0;
 			var result2 = 0;
-			var vertikalTriangle0 = [];
-			var vertikalTriangle1 = [];
-			var vertikalTriangle2 = [];
-					
+			
 			input.split("\n").forEach(function(line) {
-				if (getSum(getTriangle(line)) > getSideLong(getTriangle(line))) {
+				line.split(" ").forEach(function(side) {
+					if (side != "") {
+						arraySides.push(parseInt(side));
+					}
+				});
+			});
+
+			for (var i = 0; i <= arraySides.length - 3; i += 3) {
+				if (isTriangle(getSides(arraySides, i))) {
 					result1++;
 				}
+			}
 
-				if (vertikalTriangle0.length < 3) {
-					vertikalTriangle0.push(getTriangle(line)[0])
+			for (var j = 0; j <= arraySides.length - 9; j += 7) {
+				if (isTriangle(getVertikalSides(arraySides, j))) {
+					result2++;
 				}
-				if (vertikalTriangle0.length == 3) {
-					if (getSum(vertikalTriangle0) > getSideLong(vertikalTriangle0)) {
-						result2++;
-					}
-					vertikalTriangle0 = [];
-				}
+			}
 
+			for (var k = 1; k <= arraySides.length - 8; k += 7) {
+				if (isTriangle(getVertikalSides(arraySides, k))) {
+					result2++;
+				}
+			}
 
-				if (vertikalTriangle1.length < 3) {
-					vertikalTriangle1.push(getTriangle(line)[1])
+			for (var l = 2; l <= arraySides.length - 7; l += 7) {
+				if (isTriangle(getVertikalSides(arraySides, l))) {
+					result2++;
 				}
-				if (vertikalTriangle1.length == 3) {
-					if (getSum(vertikalTriangle1) > getSideLong(vertikalTriangle1)) {
-						result2++;
-					}
-					vertikalTriangle1 = [];
-				}
-
-				if (vertikalTriangle2.length < 3) {
-					vertikalTriangle2.push(getTriangle(line)[2])
-				}
-				if (vertikalTriangle2.length == 3) {
-					if (getSum(vertikalTriangle2) > getSideLong(vertikalTriangle2)) {
-						result2++;
-					}
-					vertikalTriangle2 = [];
-				}
-			});
+			}
 
 			var result = result1 + ", " + result2;
 
 			return result;
 		}
 
-
-		function getSum(triangle) {
-			var indexSideLong = triangle.indexOf(getSideLong(triangle));
+		function isTriangle(sides) {
+			var sideLong = Math.max(sides[0], sides[1], sides[2]);
+			var indexSideLong = sides.indexOf(sideLong);
 			var sumSides = 0;
-			
-			for (var i = 0; i < triangle.length; i++) {
+		
+			for (var i = 0; i < sides.length; i++) {
 				if (i != indexSideLong) {
-					sumSides += triangle[i];
+					sumSides += sides[i];
 				}
 			}
 
-			return sumSides;
+			if (sumSides > sideLong) {
+				return true;
+			}
 		}
 
-
-		function getSideLong(triangle) {
-			var sideLong = Math.max(triangle[0], triangle[1], triangle[2]);
-			
-			return sideLong;
-		}
-
-
-		function getTriangle(line) {
-			var str = line.split(" ");
-			var triangle = [];
+		function getSides(arraySides, j) {
+			var sides = [];
+			sides.push(arraySides[j], arraySides[j + 1], arraySides[j + 2])
 				
-			for (var i = 0; i < str.length; i++) {
-				if (str[i] != "") {
-					triangle.push(parseInt(str[i]));
-				}
-			}
+			return sides;
+		}
 
-			return triangle;
+		function getVertikalSides(arraySides, j) {
+			var sides = [];
+			sides.push(arraySides[j], arraySides[j + 3], arraySides[j + 6])
+			console.log(sides);
+			
+			return sides;
 		}
 
 		
+
 		var input = 
  `785  516  744
   272  511  358
