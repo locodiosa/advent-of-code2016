@@ -29,22 +29,14 @@
 				}
 			}
 
-			for (var j = 0; j <= arraySides.length - 9; j += 7) {
-				if (isTriangle(getVertikalSides(arraySides, j))) {
-					result2++;
+			var lastTriangle = 9;
+			for (var firstSide = 0; firstSide <= 2; firstSide++) {
+				for (var j = firstSide; j <= arraySides.length - lastTriangle; j += 9) {
+					if (isTriangle(getVertikalSides(arraySides, j))) {
+						result2++;
+					}
 				}
-			}
-
-			for (var k = 1; k <= arraySides.length - 8; k += 7) {
-				if (isTriangle(getVertikalSides(arraySides, k))) {
-					result2++;
-				}
-			}
-
-			for (var l = 2; l <= arraySides.length - 7; l += 7) {
-				if (isTriangle(getVertikalSides(arraySides, l))) {
-					result2++;
-				}
+				lastTriangle--;
 			}
 
 			var result = result1 + ", " + result2;
@@ -82,8 +74,6 @@
 			
 			return sides;
 		}
-
-		
 
 		var input = 
  `785  516  744
