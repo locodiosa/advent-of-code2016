@@ -18,6 +18,8 @@
    //  input.split("\n").forEach(function(line) {
        
       var blocks = line.split("-");
+      console.log(blocks[blocks.length - 1]);
+
       var letters = [];
 
       for (var i = 0; i < blocks.length - 1; i++) {
@@ -25,6 +27,7 @@
       }
 
       var sortLetters = letters.join("").split("").sort();
+      console.log(sortLetters);
       var sortObj = {};
 
       for (i = 0; i < sortLetters.length; i++) {
@@ -50,36 +53,29 @@
         maxLetter = Math.max(maxLetter, sortObj[key]);
       }
 
+      while (result.length < 5) {
+        for (var key in sortObj) {
+          if (maxLetter == sortObj[key]) {
+            if (result.length < 5) {
+              result.push(key);
+            }
+          }
+        }
+        maxLetter -= 1;
+      }
+
+     // if (result.join("") == )
+
+
+      
+
       console.log(sortObj);
 
-   Object.prototype.findEntity = function(keyObj) {
-    var arr = this, p, key, val, ret;
-    for (p in keyObj) {
-        if (keyObj.hasOwnProperty(p)) {
-            key = p;
-            val = keyObj[p];
-        }
-    }
-    for (p in arr) {
-        if (p == key) {
-            if (arr[p] == val) {
-                return arr;
-            }
-        } else if (arr[p] instanceof Object) {
-            if (arr.hasOwnProperty(p)) {
-                ret = findEntity(arr[p], keyObj);
-                if (ret) {
-                    return ret;
-                }
-            }
-        }
-    }
-    return false;
-};
+   
     // });
 
     
-console.log(Object.prototype.findEntity(sortObj));
+
 
       return result;      
     }
