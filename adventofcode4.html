@@ -12,79 +12,64 @@
     }
 
     function getResult() {
+      var sumIDs = 0;
+   
+      input.split("\n").forEach(function(line) {
+        var result = []; 
+        var blocks = line.split("-");
+        var letters = [];
 
-      var result = [];
-
-   //  input.split("\n").forEach(function(line) {
-       
-      var blocks = line.split("-");
-      console.log(blocks[blocks.length - 1]);
-
-      var letters = [];
-
-      for (var i = 0; i < blocks.length - 1; i++) {
-        letters.push(blocks[i]);
-      }
-
-      var sortLetters = letters.join("").split("").sort();
-      console.log(sortLetters);
-      var sortObj = {};
-
-      for (i = 0; i < sortLetters.length; i++) {
-        var counter = 1;
-        var compareLetter = sortLetters[i];
-
-        for (var j = i + 1; j < sortLetters.length; j++) {
-          if (compareLetter == sortLetters[j]) {
-            counter += 1;
-            //console.log(compareLetter);
-          }
-        
-          sortObj[compareLetter] = counter;
+        for (var i = 0; i < blocks.length - 1; i++) {
+          letters.push(blocks[i]);
         }
 
-        i += counter - 1;
-        
-      }
+        var sortLetters = letters.join("").split("").sort();
+        var sortObj = {};
 
-      var maxLetter = 1;
+        for (i = 0; i < sortLetters.length; i++) {
+          var counter = 1;
+          var compareLetter = sortLetters[i];
 
-      for (var key in sortObj) {
-        maxLetter = Math.max(maxLetter, sortObj[key]);
-      }
+          for (var j = i + 1; j < sortLetters.length; j++) {
+            if (compareLetter == sortLetters[j]) {
+              counter += 1;
+            }
+          
+            sortObj[compareLetter] = counter;
+          }
 
-      while (result.length < 5) {
+          i += counter - 1;
+        }
+
+        var maxLetter = 1;
+
         for (var key in sortObj) {
-          if (maxLetter == sortObj[key]) {
-            if (result.length < 5) {
-              result.push(key);
+          maxLetter = Math.max(maxLetter, sortObj[key]);
+        }
+
+        while (result.length < 5) {
+          for (var key in sortObj) {
+            if (maxLetter == sortObj[key]) {
+              if (result.length < 5) {
+                result.push(key);
+              }
             }
           }
+          maxLetter -= 1;
         }
-        maxLetter -= 1;
-      }
 
-     // if (result.join("") == )
+        var code = blocks[blocks.length - 1].slice(4, 9);
+        
+        if (result.join("") == code) {
+          sumIDs += parseInt(blocks[blocks.length - 1].slice(0, 3));
+        }
+      });
 
-
-      
-
-      console.log(sortObj);
-
-   
-    // });
-
-    
-
-
-      return result;      
+      return sumIDs;      
     }
 
-
-	
-
-	var line = 
- `fubrjhqlf-edvnhw-dftxlvlwlrq-803[wjvzd]`/*
+	var input = 
+ `fubrjhqlf-edvnhw-dftxlvlwlrq-803[wjvzd]
 kzgwomvqk-rmttgjmiv-lmxizbumvb-902[zmnji]
 dkqjcbctfqwu-dwppa-fgukip-596[syiua]
 xjinphzm-bmvyz-ytz-gjbdnodxn-135[nzbdj]
@@ -1031,7 +1016,7 @@ lujbbrornm-vjpwncrl-kdwwh-ydalqjbrwp-615[lmjzy]
 kpvgtpcvkqpcn-dwppa-rwtejcukpi-336[pcktv]
 hwbba-gii-eqpvckpogpv-492[pbgiv]
 zsxyfgqj-hqfxxnknji-idj-xytwflj-359[jxfin]`;
-*/
+
 	</script>
 </head>
 <body onload="calc()">
