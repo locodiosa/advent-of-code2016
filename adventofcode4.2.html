@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+
+    var arraySides = [];
+
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();
+    }
+
+    function getResult() {
+      var sumIDs = 0;
+   
+     // input.split("\n").forEach(function(line) {
+        var result = []; 
+        var blocks = line.split("-").join(" ");
+        var letters = [];
+
+        for (var i = 0; i < blocks.length - 11; i++) {
+          letters.push(blocks[i]);
+        }
+
+        var numberID = blocks.split(" ");
+        numberID = parseInt(numberID[numberID.length - 1].slice(0, 3));
+       
+        for (i = 0; i < letters.length; i++) {
+          letters[i] = parseInt(getNumberLetter(letters[i]));
+          letters[i] = letters[i] - numberID + 26 / 26;
+          letters[i] = getNewLetter(letters[i]);
+          if (letters[i] === undefined) {
+            letters[i] = " ";
+          }
+        }
+
+        var words = letters.join("").split(" ");
+
+        for (i = 0; i < words.length; i++) {
+          if (words[i] == "north") {
+            sumIDs = numberID;
+          }
+        }
+        
+        console.log(words);
+
+
+
+      return sumIDs;      
+    }
+
+    function getNewLetter(numberLetter) {
+       switch(numberLetter) {
+        case 0:
+          return "a";
+          break;
+        case 1:
+          return "b";
+          break;  
+        case 2:
+          return "c";
+          break;
+        case 3:
+          return "d";
+          break;
+        case 4:
+          return "e";
+          break;
+        case 5:
+          return "f";
+          break;
+        case 6:
+          return "g";
+          break;
+        case 7:
+          return "h";
+          break;
+        case 8:
+          return "i";
+          break;
+        case 9:
+          return "j";
+          break;
+        case 10:
+          return "k";
+          break;
+        case 11:
+          return "l";
+          break;
+        case 12:
+          return "m";
+          break;
+        case 13:
+          return "n";
+          break;
+        case 14:
+          return "o";
+          break;
+        case 15:
+          return "p";
+          break;
+        case 16:
+          return "q";
+          break;
+        case 17:
+          return "r";
+          break;
+        case 18:
+          return "s";
+          break;
+        case 19:
+          return "t";
+          break;
+        case 20:
+          return "u";
+          break;
+        case 21:
+          return "v";
+          break;
+        case 22:
+          return "w";
+          break;
+        case 23:
+          return "x";
+          break;
+        case 24:
+          return "y";
+          break;
+        case 25:
+          return "z";
+          break;
+      }
+    }
+
+    function getNumberLetter(letter) {
+      switch(letter) {
+        case "a":
+          return 0;
+          break;
+        case "b":
+          return 1;
+          break;  
+        case "c":
+          return 2;
+          break;
+        case "d":
+          return 3;
+          break;
+        case "e":
+          return 4;
+          break;
+        case "f":
+          return 5;
+          break;
+        case "g":
+          return 6;
+          break;
+        case "h":
+          return 7;
+          break;
+        case "i":
+          return 8;
+          break;
+        case "j":
+          return 9;
+          break;
+        case "k":
+          return 10;
+          break;
+        case "l":
+          return 11;
+          break;
+        case "m":
+          return 12;
+          break;
+        case "n":
+          return 13;
+          break;
+        case "o":
+          return 14;
+          break;
+        case "p":
+          return 15;
+          break;
+        case "q":
+          return 16;
+          break;
+        case "r":
+          return 17;
+          break;
+        case "s":
+          return 18;
+          break;
+        case "t":
+          return 19;
+          break;
+        case "u":
+          return 20;
+          break;
+        case "v":
+          return 21;
+          break;
+        case "w":
+          return 22;
+          break;
+        case "x":
+          return 23;
+          break;
+        case "y":
+          return 24;
+          break;
+        case "z":
+          return 25;
+          break;
+      }
+    }
+
+//abcdefghijklmnopqrstuvwxyz
+
+var line = 
+`qzmt-zixmtkozy-ivhz-343[wjvzd]`
+
+</script>
+</head>
+<body onload="calc()">
+<div id="result"></div>
+
+</body>
+</html>
