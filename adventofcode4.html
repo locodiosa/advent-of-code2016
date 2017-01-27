@@ -6,66 +6,276 @@
 		"use strict";
 
     var arraySides = [];
+    var sumIDs = 0;
+    var roomeNorthPole = 0;
 
     function calc() {
       document.getElementById("result").innerHTML = getResult();
     }
 
     function getResult() {
-      var sumIDs = 0;
-   
       input.split("\n").forEach(function(line) {
-        var result = []; 
-        var blocks = line.split("-");
-        var letters = [];
-
-        for (var i = 0; i < blocks.length - 1; i++) {
-          letters.push(blocks[i]);
-        }
-
-        var sortLetters = letters.join("").split("").sort();
-        var sortObj = {};
-
-        for (i = 0; i < sortLetters.length; i++) {
-          var counter = 1;
-          var compareLetter = sortLetters[i];
-
-          for (var j = i + 1; j < sortLetters.length; j++) {
-            if (compareLetter == sortLetters[j]) {
-              counter += 1;
-            }
-          
-            sortObj[compareLetter] = counter;
-          }
-
-          i += counter - 1;
-        }
-
-        var maxLetter = 1;
-
-        for (var key in sortObj) {
-          maxLetter = Math.max(maxLetter, sortObj[key]);
-        }
-
-        while (result.length < 5) {
-          for (var key in sortObj) {
-            if (maxLetter == sortObj[key]) {
-              if (result.length < 5) {
-                result.push(key);
-              }
-            }
-          }
-          maxLetter -= 1;
-        }
-
-        var code = blocks[blocks.length - 1].slice(4, 9);
-        
-        if (result.join("") == code) {
-          sumIDs += parseInt(blocks[blocks.length - 1].slice(0, 3));
-        }
+        getSumIDs(line);
+        findNorthPole(line);
       });
 
-      return sumIDs;      
+      return  sumIDs + ", " + roomeNorthPole;
+    }
+
+    function getSumIDs(line) {
+      var result = []; 
+      var blocks = line.split("-");
+      
+      var letters = [];
+
+      for (var i = 0; i < blocks.length - 1; i++) {
+        letters.push(blocks[i]);
+      }
+     
+      var sortLetters = letters.join("").split("").sort();
+      var sortObj = {};
+
+      for (i = 0; i < sortLetters.length; i++) {
+        var counter = 1;
+        var compareLetter = sortLetters[i];
+
+        for (var j = i + 1; j < sortLetters.length; j++) {
+          if (compareLetter == sortLetters[j]) {
+            counter += 1;
+          }
+        
+          sortObj[compareLetter] = counter;
+        }
+
+        i += counter - 1;
+      }
+
+      var maxLetter = 1;
+
+      for (var key in sortObj) {
+        maxLetter = Math.max(maxLetter, sortObj[key]);
+      }
+
+      while (result.length < 5) {
+        for (var key in sortObj) {
+          if (maxLetter == sortObj[key]) {
+            if (result.length < 5) {
+              result.push(key);
+            }
+          }
+        }
+        maxLetter -= 1;
+      }
+
+      var code = blocks[blocks.length - 1].slice(4, 9);
+      
+      if (result.join("") == code) {
+        sumIDs += parseInt(blocks[blocks.length - 1].slice(0, 3));
+      }
+   
+      return sumIDs;
+    }
+
+    function findNorthPole(line) {
+      var str = line.split("-").join(" ");
+        var letters = [];
+
+        for (var i = 0; i < str.length - 11; i++) {
+          letters.push(str[i]);
+        }
+        
+        var numberID = str.split(" ");
+        numberID = parseInt(numberID[numberID.length - 1].slice(0, 3));
+       
+        for (i = 0; i < letters.length; i++) {
+          letters[i] = parseInt(getNumberLetter(letters[i]));
+          letters[i] += numberID % 26;
+          
+          if (letters[i] > 26) {
+            letters[i] -= numberID % 26;
+            letters[i] = numberID % 26 - 26 + letters[i];
+          }
+
+          letters[i] = getNewLetter(letters[i]);
+
+          if (letters[i] === undefined) {
+            letters[i] = " ";
+          }
+        }
+
+        var words = letters.join("").split(" ");
+
+        for (i = 0; i < words.length; i++) {
+          if (words[i] == "northpole") {
+            roomeNorthPole = numberID;
+          }
+        }
+    }
+
+    function getNewLetter(numberLetter) {
+       switch(numberLetter) {
+        case 1:
+          return "a";
+          break;
+        case 2:
+          return "b";
+          break;  
+        case 3:
+          return "c";
+          break;
+        case 4:
+          return "d";
+          break;
+        case 5:
+          return "e";
+          break;
+        case 6:
+          return "f";
+          break;
+        case 7:
+          return "g";
+          break;
+        case 8:
+          return "h";
+          break;
+        case 9:
+          return "i";
+          break;
+        case 10:
+          return "j";
+          break;
+        case 11:
+          return "k";
+          break;
+        case 12:
+          return "l";
+          break;
+        case 13:
+          return "m";
+          break;
+        case 14:
+          return "n";
+          break;
+        case 15:
+          return "o";
+          break;
+        case 16:
+          return "p";
+          break;
+        case 17:
+          return "q";
+          break;
+        case 18:
+          return "r";
+          break;
+        case 19:
+          return "s";
+          break;
+        case 20:
+          return "t";
+          break;
+        case 21:
+          return "u";
+          break;
+        case 22:
+          return "v";
+          break;
+        case 23:
+          return "w";
+          break;
+        case 24:
+          return "x";
+          break;
+        case 25:
+          return "y";
+          break;
+        case 26:
+          return "z";
+          break;
+      }
+    }
+
+    function getNumberLetter(letter) {
+      switch(letter) {
+        case "a":
+          return 1;
+          break;
+        case "b":
+          return ;
+          break; 2 
+        case "c":
+          return 3;
+          break;
+        case "d":
+          return 4;
+          break;
+        case "e":
+          return 5;
+          break;
+        case "f":
+          return 6;
+          break;
+        case "g":
+          return 7;
+          break;
+        case "h":
+          return 8;
+          break;
+        case "i":
+          return 9;
+          break;
+        case "j":
+          return 10;
+          break;
+        case "k":
+          return 11;
+          break;
+        case "l":
+          return 12;
+          break;
+        case "m":
+          return 13;
+          break;
+        case "n":
+          return 14;
+          break;
+        case "o":
+          return 15;
+          break;
+        case "p":
+          return 16;
+          break;
+        case "q":
+          return 17;
+          break;
+        case "r":
+          return 18;
+          break;
+        case "s":
+          return 19;
+          break;
+        case "t":
+          return 20;
+          break;
+        case "u":
+          return 21;
+          break;
+        case "v":
+          return 22;
+          break;
+        case "w":
+          return 23;
+          break;
+        case "x":
+          return 24;
+          break;
+        case "y":
+          return 25;
+          break;
+        case "z":
+          return 26;
+          break;
+      }
     }
 
 	var input = 

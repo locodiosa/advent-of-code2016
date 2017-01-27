@@ -6,23 +6,31 @@
 		"use strict";
 
     var arraySides = [];
+    var roomeNorthPole = 0;
 
     function calc() {
       document.getElementById("result").innerHTML = getResult();
     }
 
     function getResult() {
-      var roomeNorthPole = 0;
+      
    
       input.split("\n").forEach(function(line) {
-        var blocks = line.split("-").join(" ");
+        findNorthPole(line);
+      });
+
+      return roomeNorthPole;      
+    }
+
+    function findNorthPole(line) {
+      var str = line.split("-").join(" ");
         var letters = [];
 
-        for (var i = 0; i < blocks.length - 11; i++) {
-          letters.push(blocks[i]);
+        for (var i = 0; i < str.length - 11; i++) {
+          letters.push(str[i]);
         }
         
-        var numberID = blocks.split(" ");
+        var numberID = str.split(" ");
         numberID = parseInt(numberID[numberID.length - 1].slice(0, 3));
        
         for (i = 0; i < letters.length; i++) {
@@ -48,9 +56,6 @@
             roomeNorthPole = numberID;
           }
         }
-      });
-
-      return roomeNorthPole;      
     }
 
     function getNewLetter(numberLetter) {
