@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();
+    }
+
+    function getResult() {
+      var result = {
+        0: [],
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
+        7: []
+      };
+
+      var result2 = [];
+      var sortObj = {};
+      
+      input.split("\n").forEach(function(line) {
+        var arrLine = [];
+        line.split("").forEach(function(letter) {
+          arrLine.push(letter);
+        });
+
+        for (var i = 0; i < arrLine.length; i++) {
+          result[i].push(arrLine[i]);
+        }
+
+        for (var prop in result) {
+           for (i = 0; i < result[prop].length; i++) {
+            var counter = 1;
+            var compareLetter = result[prop][i];
+
+            for (var j = i + 1; j < result[prop].length; j++) {
+              if (compareLetter == result[prop][j]) {
+                counter += 1;
+              }
+              sortObj[compareLetter] = counter;
+            }
+
+            i += counter - 1;
+          }
+        }
+ console.log(sortObj);
+      });
+      
+
+      var maxLetter = 1;
+
+      for (var key in sortObj) {
+        maxLetter = Math.max(maxLetter, sortObj[key]);
+        console.log(key);  
+      }
+
+      for (var key in sortObj) {
+        if (maxLetter == sortObj[key]) {
+          result2.push(key);
+        }
+      }
+
+      return result2;
+    }
+
+  var input = `tmcezlum
+afzwmyrz
+ollxkaqs
+oqvdutkr
+ufzmsidi
+wnidhqow
+efgwivmh
+endrsvkk
+`
+
+
+	</script>
+</head>
+<body onload="calc()">
+<div id="result"></div>
+
+</body>
+</html>
