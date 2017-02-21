@@ -22,6 +22,7 @@
       };
 
       var password = [];
+      var passwordLess = [];
       
       input.split("\n").forEach(function(line) {
         var arrLine = [];
@@ -36,25 +37,30 @@
       });
 
       for (var prop in result) {
-        var maxcounter = 1;
+        var maxCounter = 1;
+        var minCounter = 20;
 
         result[prop].forEach(function(elem) {
           var counter = 1;
-          
+                    
           for (var i = result[prop].indexOf(elem); i < result[prop].length; i++) {
             if (elem == result[prop][i + 1]) {
               counter++;
             }
 
-            if (counter > maxcounter) {
-              maxcounter = counter;
+            if (counter > maxCounter) {
+              maxCounter = counter;
               password[prop] = elem;
             }
+          }
+
+          if (counter <= minCounter && passwordLess[prop] == undefined) {
+            passwordLess[prop] = elem;
           }
         });
       }
 
-      return password.join("");
+      return password.join("") + ", " + passwordLess.join("");
     }
 
   var input = `tmcezlum
