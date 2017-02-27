@@ -5,77 +5,66 @@
 	<script>
 		"use strict";
 
+    var counter = 0;
+
     function calc() {
       document.getElementById("result").innerHTML = getResult();
-    }
+    }    
 
     function getResult() {
-      var counter = 0;
-   
       input.split("\n").forEach(function(line) {
         var arrStr = [];
         var arrStrSquare = [];
-     
-        if (line.indexOf("[")) {
-          arrStr.push(line.slice(0, line.indexOf("[")));
-          arrStrSquare.push(line.slice(line.indexOf("[") + 1, line.indexOf("]")));
-          var str = line.slice(line.indexOf("]") + 1);
-       
-          if (str.indexOf("[") != - 1) {
-            arrStr.push(str.slice(0, str.indexOf("[")));
-            arrStrSquare.push(str.slice(str.indexOf("[") + 1, str.indexOf("]")));
-            var str2 = str.slice(str.indexOf("]") + 1);
 
-            if (str2.indexOf("[") != - 1) {
-              arrStr.push(str2.slice(0, str2.indexOf("[")));
-              arrStrSquare.push(str2.slice(str2.indexOf("[") + 1, str2.indexOf("]")));
-              var str3 = str2.slice(str2.indexOf("]") + 1);
-
-              if (str3.indexOf("[") != - 1) {
-                arrStr.push(str3.slice(0, str3.indexOf("[")));
-                arrStrSquare.push(str3.slice(str3.indexOf("[") + 1, str3.indexOf("]")));
-              } else {
-                arrStr.push(str3);
-              }
-
-            } else {
-              arrStr.push(str2);
-            }
-
-          } else {
-            arrStr.push(str);
-          }
-        }
-      
-        for (var word = 0; word < arrStr.length; word++) {
-          var letters = arrStr[word].split("");
-
-          for (var j = 1; j < letters.length - 1; j++) {
-            if (letters[j] == letters[j + 1] && letters[j - 1] == letters[j + 2] && letters[j] != letters[j - 1]) {
-              
-              ++counter;
-              j = letters.length;
-              word = arrStr.length;
-              
-              for (var wordSquare = 0; wordSquare < arrStrSquare.length; wordSquare++) {
-                var lettersSquare = arrStrSquare[wordSquare].split("");
-               
-                for (var i = 1; i < lettersSquare.length - 1; i++) {
-                  if (lettersSquare[i] == lettersSquare[i + 1] && lettersSquare[i - 1] == lettersSquare[i + 2] && lettersSquare[i] != lettersSquare[i - 1]) {
-                    
-                    --counter;
-                    i = lettersSquare.length;
-                    wordSquare = arrStrSquare.length;         
-                  } 
-                }
-              }
-            }
-          }
-        }
-    }); 
+        getArr(line, arrStr, arrStrSquare);
+        count(arrStr, arrStrSquare);
+      }); 
       
       return counter;
     }
+
+    function getArr(line, arrStr, arrStrSquare) {
+      var str = line.slice(line.indexOf("]") + 1);
+      
+      if (line.indexOf("[") != - 1) {
+        arrStr.push(line.slice(0, line.indexOf("[")));
+        arrStrSquare.push(line.slice(line.indexOf("[") + 1, line.indexOf("]")));
+        getArr(str, arrStr, arrStrSquare);
+      } else {
+        arrStr.push(str);
+      }
+    }
+
+    function count(arrStr, arrStrSquare, sign) {
+      for (var word = 0; word < arrStr.length; word++) {
+        var letters = arrStr[word].split("");
+
+        for (var j = 1; j < letters.length - 1; j++) {
+          if (letters[j] == letters[j + 1] && letters[j - 1] == letters[j + 2] && letters[j] != letters[j - 1]) {
+            
+            ++counter;
+            j = letters.length;
+            word = arrStr.length;
+
+            for (var wordSquare = 0; wordSquare < arrStrSquare.length; wordSquare++) {
+              var lettersSquare = arrStrSquare[wordSquare].split("");
+             
+              for (var i = 1; i < lettersSquare.length - 1; i++) {
+                if (lettersSquare[i] == lettersSquare[i + 1] && lettersSquare[i - 1] == lettersSquare[i + 2] && lettersSquare[i] != lettersSquare[i - 1]) {
+                  
+                  --counter;
+                  i = lettersSquare.length;
+                  wordSquare = arrStrSquare.length;         
+                } 
+              }
+            }
+          }
+        }
+      }
+    }
+
+  
+    
 
   var input = `dnwtsgywerfamfv[gwrhdujbiowtcirq]bjbhmuxdcasenlctwgh
 rnqfzoisbqxbdlkgfh[lwlybvcsiupwnsyiljz]kmbgyaptjcsvwcltrdx[ntrpwgkrfeljpye]jxjdlgtntpljxaojufe
