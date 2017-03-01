@@ -6,6 +6,7 @@
 		"use strict";
 
     var counter = 0;
+    var counter2 = 0;
 
     function calc() {
       document.getElementById("result").innerHTML = getResult();
@@ -18,9 +19,10 @@
 
         getArr(line, arrStr, arrStrSquare);
         count(arrStr, arrStrSquare);
+        count2(arrStr, arrStrSquare);
       }); 
       
-      return counter;
+      return counter + ", " + counter2;
     }
 
     function getArr(line, arrStr, arrStrSquare) {
@@ -40,8 +42,9 @@
         var letters = arrStr[word].split("");
 
         for (var j = 1; j < letters.length - 1; j++) {
-          if (letters[j] == letters[j + 1] && letters[j - 1] == letters[j + 2] && letters[j] != letters[j - 1]) {
-            
+          if (letters[j] == letters[j + 1] && 
+              letters[j - 1] == letters[j + 2] && 
+              letters[j] != letters[j - 1]) {         
             ++counter;
             j = letters.length;
             word = arrStr.length;
@@ -50,8 +53,9 @@
               var lettersSquare = arrStrSquare[wordSquare].split("");
              
               for (var i = 1; i < lettersSquare.length - 1; i++) {
-                if (lettersSquare[i] == lettersSquare[i + 1] && lettersSquare[i - 1] == lettersSquare[i + 2] && lettersSquare[i] != lettersSquare[i - 1]) {
-                  
+                if (lettersSquare[i] == lettersSquare[i + 1] && 
+                    lettersSquare[i - 1] == lettersSquare[i + 2] && 
+                    lettersSquare[i] != lettersSquare[i - 1]) {                  
                   --counter;
                   i = lettersSquare.length;
                   wordSquare = arrStrSquare.length;         
@@ -63,7 +67,31 @@
       }
     }
 
-  
+    function count2(arrStr, arrStrSquare) {
+      for (var word = 0; word < arrStr.length; word++) {
+        var letters = arrStr[word].split("");
+
+        for (var j = 0; j < letters.length - 2; j++) {
+          if (letters[j] == letters[j + 2] && letters[j] != letters[j + 1]) {
+            for (var wordSquare = 0; wordSquare < arrStrSquare.length; wordSquare++) {
+              var lettersSquare = arrStrSquare[wordSquare].split("");
+              
+              for (var i = 0; i < lettersSquare.length - 2; i++) {                
+                if (lettersSquare[i] == lettersSquare[i + 2] && 
+                    lettersSquare[i] == letters[j + 1] && 
+                    lettersSquare[i + 1] == letters[j]) {
+                  ++counter2;  
+                  i = lettersSquare.length;
+                  wordSquare = arrStrSquare.length;  
+                  j = letters.length;
+                  word = arrStr.length;        
+                } 
+              }
+            }
+          }
+        }
+      }
+    } 
     
 
   var input = `dnwtsgywerfamfv[gwrhdujbiowtcirq]bjbhmuxdcasenlctwgh
