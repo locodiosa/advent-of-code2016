@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();
+    }    
+
+    function getResult() {
+      var newScreen = initScreen(50, 6);
+      var wide, tall, x, y, stepX, stepY;
+
+
+      input.split("\n").forEach(function(line) {
+        if (line.indexOf("rect") != -1) {
+          wide = parseInt(line.slice(5, line.indexOf("x")));
+          tall = parseInt(line.slice(line.indexOf("x") + 1));
+          /*fillScreen(newScreen, line.slice(5, line.indexOf("x")), 
+                                  line.slice(line.indexOf("x") + 1));*/
+          
+        }      
+        
+        if (line.indexOf("rotate row") != -1) {
+          //console.log(newScreen);
+          /*turnRow(newScreen, line.slice(13, line.indexOf("b") - 1), 
+                             line.slice(line.indexOf("b") + 3));  
+          */
+          y = parseInt(line.slice(13, line.indexOf("b") - 1));         
+          stepY = parseInt(line.slice(line.indexOf("b") + 3)); 
+          
+          fillRow(newScreen, wide, y, stepY);
+          console.log(newScreen); 
+        }
+
+        if (line.indexOf("rotate column") != -1) {
+          x = parseInt(line.slice(16, line.indexOf("b") - 1));         
+          stepX = parseInt(line.slice(line.indexOf("b") + 3)); 
+          
+          fillColumn(newScreen, tall, x, stepX);
+
+          console.log(newScreen); 
+        }
+        
+
+      });
+      
+    } 
+
+    function initScreen(x, y) {
+      var newScreen = new Array(x);
+
+      for (var i = 0; i < newScreen.length; i++) {
+        newScreen[i] = new Array(y);
+      }
+
+      for (var i = 0; i < newScreen.length; i++) {
+        for (var j = 0; j < newScreen[i].length; j++) {
+          newScreen[i][j] = 0;
+        }
+      }
+
+      return newScreen;
+    }
+
+                  function fillRow(newScreen, wide, y, step) {      
+                    for (var j = step; j < wide + step; j++) {    
+                    console.log(wide);    
+                      if (j >= newScreen.length) {     
+                        console.log(j);
+                        for (var i = 0; i < wide - (newScreen.length - step); i++) {
+
+                          newScreen[i][y] = 1; 
+                          console.log(newScreen[i][y]);
+                        }  
+                        j = 51;       
+                      }
+                      if (j == 51) break;
+                      newScreen[j][y] = 1;       
+                    }      
+                  }
+
+    function fillColumn(newScreen, tall, x, step) {
+      for (var j = step; j < tall + step; j++) {    
+      
+        if (j >= newScreen[j].length) {     
+          console.log(j);
+          for (var i = 0; i < tall - (newScreen.length - step); i++) {
+
+            newScreen[i][x] = 1; 
+            console.log(newScreen[i][x]);
+          }  
+          j = 7;       
+        }
+        if (j == 7) break;
+        newScreen[j][x] = 1;       
+      }      
+    }
+
+                  function turnRow(newScreen, y, step) {
+                    for (var i = 0; i < newScreen.length; i++) {
+                      if (newScreen[i][y] == 1) {
+                        newScreen[i][y] = 0;
+                        newScreen[step][y] = 1;
+                      }
+                    }
+                  }
+    
+
+  var input = `rect 10x1
+rotate column x=0 by 0`
+
+
+	</script>
+</head>
+<body onload="calc()">
+<div id="result"></div>
+
+</body>
+</html>
