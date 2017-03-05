@@ -5,15 +5,43 @@
 	<script>
 		"use strict";
 
-    function calc() {
+    var newScreen = initScreen(50, 6);
+    var wide, tall, x, y, stepX, stepY;
+
+    function draw(newScreen) {
+      var canvas  = document.getElementById("canvas");
+      canvas.width  = newScreen.length * 10; 
+      canvas.height = newScreen[0].length * 10; 
+        
+      var context = canvas.getContext('2d');
+      context.fillStyle   = '#eee'; 
+      context.fillRect(0, 0, canvas.width, canvas.height);  
+        
+      context.beginPath();
+      fillScreen(context, newScreen, wide, tall);
+      context.stroke(); 
+    }
+
+    function calc() {      
       document.getElementById("result").innerHTML = getResult();
-    }    
+      draw(newScreen);
+    }  
 
-    function getResult() {
-      var newScreen = initScreen(50, 6);
-      var wide, tall, x, y, stepX, stepY;
+    function fillScreen(context, newScreen, wide, tall) {  
+      console.log(wide);
+      context.fillStyle = '#000';    
+      for (var i = 0; i < wide; i++) {  
 
+        for (var j = 0; j < tall; j++) {
+          newScreen[i][j] = 1; 
+          var x = i * 10;
+          var y = j * 10;
+          context.fillRect(x,y,7,7);
+        }
+      }             
+    }     
 
+    function getResult() {   
       input.split("\n").forEach(function(line) {
         if (line.indexOf("rect") != -1) {
           wide = parseInt(line.slice(5, line.indexOf("x")));
@@ -82,22 +110,22 @@
                     }      
                   }
 
-    function fillColumn(newScreen, tall, x, step) {
-      for (var j = step; j < tall + step; j++) {    
-      
-        if (j >= newScreen[j].length) {     
-          console.log(j);
-          for (var i = 0; i < tall - (newScreen.length - step); i++) {
+                  function fillColumn(newScreen, tall, x, step) {
+                    for (var j = step; j < tall + step; j++) {    
+                    
+                      if (j >= newScreen.length) {     
+                        console.log(j);
+                        for (var i = 0; i < tall - (newScreen.length - step); i++) {
 
-            newScreen[i][x] = 1; 
-            console.log(newScreen[i][x]);
-          }  
-          j = 7;       
-        }
-        if (j == 7) break;
-        newScreen[j][x] = 1;       
-      }      
-    }
+                          newScreen[i][x] = 1; 
+                          console.log(newScreen[i][x]);
+                        }  
+                        j = 7;       
+                      }
+                      if (j == 7) break;
+                      newScreen[j][x] = 1;       
+                    }      
+                  }
 
                   function turnRow(newScreen, y, step) {
                     for (var i = 0; i < newScreen.length; i++) {
@@ -107,16 +135,19 @@
                       }
                     }
                   }
+
+    
     
 
-  var input = `rect 10x1
-rotate column x=0 by 0`
+  var input = `rect 3x2
+rotate row y=0 by 1`
 
 
 	</script>
 </head>
 <body onload="calc()">
 <div id="result"></div>
+<canvas id="canvas"></canvas>
 
 </body>
 </html>
