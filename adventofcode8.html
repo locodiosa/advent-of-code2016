@@ -7,6 +7,7 @@
 
     var newScreen = initScreen(50, 6);
     var wide, tall, x, y, stepX, stepY;
+    var counter = 0;
 
     function draw(newScreen) {
       var canvas  = document.getElementById("canvas");
@@ -18,62 +19,54 @@
       context.fillRect(0, 0, canvas.width, canvas.height);  
         
       context.beginPath();
-      fillScreen(context, newScreen, wide, tall);
+      getResult(context)
       context.stroke(); 
     }
 
     function calc() {      
-      document.getElementById("result").innerHTML = getResult();
-      draw(newScreen);
+      document.getElementById("result").innerHTML = draw(newScreen);      
     }  
 
-    function fillScreen(context, newScreen, wide, tall) {  
-      console.log(wide);
+    function fillScreen(context, newScreen, wide, tall) {        
       context.fillStyle = '#000';    
       for (var i = 0; i < wide; i++) {  
 
         for (var j = 0; j < tall; j++) {
-          newScreen[i][j] = 1; 
+          newScreen[i][j] = 1;
+          counter++;
           var x = i * 10;
           var y = j * 10;
           context.fillRect(x,y,7,7);
         }
-      }             
+      } 
+      console.log(counter);            
     }     
 
-    function getResult() {   
+    function getResult(context) {   
       input.split("\n").forEach(function(line) {
+
         if (line.indexOf("rect") != -1) {
           wide = parseInt(line.slice(5, line.indexOf("x")));
-          tall = parseInt(line.slice(line.indexOf("x") + 1));
-          /*fillScreen(newScreen, line.slice(5, line.indexOf("x")), 
-                                  line.slice(line.indexOf("x") + 1));*/
-          
+          tall = parseInt(line.slice(line.indexOf("x") + 1));          
+          fillScreen(context, newScreen, wide, tall);
         }      
         
-        if (line.indexOf("rotate row") != -1) {
-          //console.log(newScreen);
-          /*turnRow(newScreen, line.slice(13, line.indexOf("b") - 1), 
-                             line.slice(line.indexOf("b") + 3));  
-          */
+        if (line.indexOf("rotate row") != -1) {         
           y = parseInt(line.slice(13, line.indexOf("b") - 1));         
-          stepY = parseInt(line.slice(line.indexOf("b") + 3)); 
-          
-          fillRow(newScreen, wide, y, stepY);
-          console.log(newScreen); 
+          stepX = parseInt(line.slice(line.indexOf("b") + 3));           
+          fillRow(context, newScreen, wide, y, stepX);          
         }
 
         if (line.indexOf("rotate column") != -1) {
           x = parseInt(line.slice(16, line.indexOf("b") - 1));         
-          stepX = parseInt(line.slice(line.indexOf("b") + 3)); 
-          
-          fillColumn(newScreen, tall, x, stepX);
-
+          stepY = parseInt(line.slice(line.indexOf("b") + 3));           
+          fillColumn(newScreen, tall, x, stepY);
           console.log(newScreen); 
         }
-        
 
       });
+      
+
       
     } 
 
@@ -93,29 +86,46 @@
       return newScreen;
     }
 
-                  function fillRow(newScreen, wide, y, step) {      
-                    for (var j = step; j < wide + step; j++) {    
-                    console.log(wide);    
-                      if (j >= newScreen.length) {     
-                        console.log(j);
-                        for (var i = 0; i < wide - (newScreen.length - step); i++) {
+    function fillRow(context, newScreen, wide, y, stepX) {
+      for (var i = 0; i < wide; i++) {                      
+       
+        if (i + stepX >= newScreen.length) {  
+          newScreen[i][y] = 0; 
+          x = i * 10;          
+          context.fillStyle = '#eee';                   
+          context.fillRect(x,y,7,7);   
 
-                          newScreen[i][y] = 1; 
-                          console.log(newScreen[i][y]);
-                        }  
-                        j = 51;       
-                      }
-                      if (j == 51) break;
-                      newScreen[j][y] = 1;       
-                    }      
-                  }
+          newScreen[i + stepX - newScreen.length][y] = 1;        
+          var x = (i + stepX - newScreen.length) * 10;  
+          var y = y * 10;
+          context.fillStyle = '#000';  
+          context.fillRect(x,y,7,7);          
+          
+        } else {
+          newScreen[i + stepX][y] = 1; 
+          x = (i + stepX) * 10;
+          y = y * 10;
+          context.fillStyle = '#000';  
+          context.fillRect(x,y,7,7); 
 
-                  function fillColumn(newScreen, tall, x, step) {
-                    for (var j = step; j < tall + step; j++) {    
+          newScreen[i][y] = 0; 
+          x = i * 10;          
+          context.fillStyle = '#eee';                   
+          context.fillRect(x,y,7,7);         
+        }                         
+        
+        
+
+             
+      }          
+    }
+
+                  function fillColumn(newScreen, tall, x, stepY) {
+                    for (var j = stepY; j < tall + stepY; j++) {    
                     
                       if (j >= newScreen.length) {     
                         console.log(j);
-                        for (var i = 0; i < tall - (newScreen.length - step); i++) {
+                        for (var i = 0; i < tall - (newScreen.length - stepY); i++) {
 
                           newScreen[i][x] = 1; 
                           console.log(newScreen[i][x]);
@@ -127,11 +137,11 @@
                     }      
                   }
 
-                  function turnRow(newScreen, y, step) {
+                  function turnRow(newScreen, y, stepX) {
                     for (var i = 0; i < newScreen.length; i++) {
                       if (newScreen[i][y] == 1) {
                         newScreen[i][y] = 0;
-                        newScreen[step][y] = 1;
+                        newScreen[i + stepX][y] = 1;
                       }
                     }
                   }
@@ -140,7 +150,7 @@
     
 
   var input = `rect 3x2
-rotate row y=0 by 1`
+rotate row y=0 by 51`
 
 
 	</script>
