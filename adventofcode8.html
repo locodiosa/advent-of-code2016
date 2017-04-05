@@ -5,190 +5,103 @@
 	<script>
 		"use strict";
 
-    var newScreen = initScreen(50, 6);
-    var wide, tall, x, y, stepX, stepY;
-    var counter = 0;
+    var display = initScreen(50, 6);
+    
+    function calc() {      
+      document.getElementById("result").innerHTML = getResult();      
+    }      
 
-    function draw(newScreen) {
-      var canvas  = document.getElementById("canvas");
-      canvas.width  = newScreen.length * 10; 
-      canvas.height = newScreen[0].length * 10; 
+    function getResult() {   
+      input.split("\n").forEach(function(line) {
+
+        if (line.indexOf("rect") != -1) {
+          var wide = parseInt(line.slice(5, line.indexOf("x")));
+          var tall = parseInt(line.slice(line.indexOf("x") + 1));          
+          doRect(display, wide, tall);
+        }      
         
-      var context = canvas.getContext('2d');
-      context.fillStyle   = '#eee'; 
-      context.fillRect(0, 0, canvas.width, canvas.height);  
-        
-      context.beginPath();
-      getResult(context)
-      context.stroke(); 
+        if (line.indexOf("rotate row") != -1) {         
+          var row = parseInt(line.slice(13, line.indexOf("b") - 1));         
+          var stepX = parseInt(line.slice(line.indexOf("b") + 3));           
+          rotateRow(display, row, stepX);          
+        }
+
+        if (line.indexOf("rotate column") != -1) {          
+          var column = parseInt(line.slice(16, line.indexOf("b") - 1));         
+          var stepY = parseInt(line.slice(line.indexOf("b") + 3));           
+          rotateColumn(display, column, stepY);         
+        }
+      });      
+
+      doOutput(display);
+
+      return getNumberOfLitPixels(display);
     }
 
-    function calc() {      
-      document.getElementById("result").innerHTML = draw(newScreen);      
-    }  
+    function initScreen(width, height) {
+      var display = new Array(height);
 
-    function fillScreen(context, newScreen, wide, tall) {        
-      context.fillStyle = '#000';    
-      for (var i = 0; i < wide; i++) {  
+      for (var i = 0; i < display.length; i++) {
+        display[i] = new Array(width);
+        for (var j = 0; j < display[i].length; j++) {
+          display[i][j] = 0;
+        }
+      }
 
-        for (var j = 0; j < tall; j++) {
-          newScreen[i][j] = 1;          
-          var x = i * 10;
-          var y = j * 10;
-          context.fillRect(x,y,7,7);
+      return display;
+    } 
+
+    function doRect(display, wide, tall) {    
+      for (var i = 0; i < tall; i++) {  
+        for (var j = 0; j < wide; j++) {
+          display[i][j] = 1; 
         }
       }              
     }     
 
-    function getResult(context) {   
-      input.split("\n").forEach(function(line) {
+    function rotateRow(display, row, stepX) {
+      var newRow = display[row].slice();
 
-        if (line.indexOf("rect") != -1) {
-          wide = parseInt(line.slice(5, line.indexOf("x")));
-          tall = parseInt(line.slice(line.indexOf("x") + 1));          
-          fillScreen(context, newScreen, wide, tall);
-        }      
-        
-        if (line.indexOf("rotate row") != -1) {         
-          y = parseInt(line.slice(13, line.indexOf("b") - 1));         
-          stepX = parseInt(line.slice(line.indexOf("b") + 3));           
-          fillRow(context, newScreen, wide, y, stepX);          
-        }
+      for (var i = 0; i < newRow.length; i++) { 
+        newRow[(i + stepX) % newRow.length] = display[row][i];             
+      } 
 
-        if (line.indexOf("rotate column") != -1) {          
-          x = parseInt(line.slice(16, line.indexOf("b") - 1));         
-          stepY = parseInt(line.slice(line.indexOf("b") + 3));           
-          fillColumn(context, newScreen, tall, x, stepY);         
-        }
+      display[row] = newRow;              
+    }    
 
+    function rotateColumn(display, column, stepY) {
+      var newColumn = [];
+
+      for (var i = 0; i < display.length; i++) {
+        newColumn[i] = display[i][column];
+      }
+
+      for (i = 0; i < newColumn.length; i++) {
+        newColumn[(i + stepY) % newColumn.length] = display[i][column];
+      }
+
+      for (var i = 0; i < display.length; i++) {
+        display[i][column] = newColumn[i];
+      }
+    }
+
+    function doOutput(display) {
+      for (var i = 0; i < display.length; i++) {
+        console.log(display[i].join("").split("0").join(".").split("1").join("#"));
+      }
+    }
+
+    function getNumberOfLitPixels(display) {
+      var result = 0;
+
+      display.forEach(function(row) {
+        row.forEach(function(pixel) {
+          result += pixel;
+        });
       });
-      
 
-      console.log("counter = " + counter);
-    } 
-
-    function initScreen(x, y) {
-      var newScreen = new Array(x);
-
-      for (var i = 0; i < newScreen.length; i++) {
-        newScreen[i] = new Array(y);
-      }
-
-      for (var i = 0; i < newScreen.length; i++) {
-        for (var j = 0; j < newScreen[i].length; j++) {
-          newScreen[i][j] = 0;
-        }
-      }
-
-      return newScreen;
-    }
-
-    function fillRow(context, newScreen, wide, y, stepX) {
-      for (var i = 0; i < newScreen.length; i++) {                      
-       
-        if (i + stepX >= newScreen.length) { 
-          if (newScreen[i][y] == 1) {
-            newScreen[i][y] = 0;
-            counter--; 
-            x = i * 10;          
-            context.fillStyle = '#eee';                   
-            context.fillRect(x,y,7,7); 
-          } else if (newScreen[i][y] == 2) {
-            newScreen[i][y] = 1;                        
-          }
-
-          if (newScreen[i + stepX - newScreen.length][y] == 0) {
-            newScreen[i + stepX - newScreen.length][y] = 1; 
-            counter++;       
-            var x = (i + stepX - newScreen.length) * 10;  
-            var y = y * 10;
-            context.fillStyle = '#000';  
-            context.fillRect(x,y,7,7);          
-          } else if (newScreen[i + stepX - newScreen.length][y] == 1) {
-            newScreen[i + stepX - newScreen.length][y] = 2;            
-          }
-          
-        } else {
-          if (newScreen[i][y] == 0) { 
-            newScreen[i + stepX][y] = 1; 
-            counter++;
-            x = (i + stepX) * 10;
-            y = y * 10;
-            context.fillStyle = '#000';  
-            context.fillRect(x,y,7,7); 
-          } else if {
-            
-          }
-
-          if (newScreen[i][y] == 1) {
-            newScreen[i][y] = 0; 
-            counter--;
-            x = i * 10;          
-            context.fillStyle = '#eee';                   
-            context.fillRect(x,y,7,7);
-          }
-        }
-
-                     
-        }               
-      }          
-    }
-
-    function fillColumn(context, newScreen, tall, x, stepY) {
-      for (var i = 0; i < tall; i++) {                      
-       
-        if (i + stepY >= newScreen[0].length) {                     
-          if (newScreen[x][i] == 1) {
-            newScreen[x][i] = 0; 
-            counter--;
-            var coordY = i * 10;          
-            context.fillStyle = '#eee';                   
-            context.fillRect(x,coordY,7,7); 
-          } else if (newScreen[x][i] == 2) {
-            newScreen[x][i] = 1;           
-          }
-
-          if (newScreen[x][i + stepY - newScreen[0].length] == 0) {
-            newScreen[x][i + stepY - newScreen[0].length] = 1;     
-            counter++;   
-            coordY = (i + stepY - newScreen[0].length) * 10;  
-            var coordX = x * 10;
-            context.fillStyle = '#000';  
-            context.fillRect(coordX,coordY,7,7);          
-          } else if (newScreen[x][i + stepY - newScreen[0].length] == 1) {
-            newScreen[x][i + stepY - newScreen[0].length] = 2;           
-          }
-          
-        } else { 
-          if (newScreen[x][i + stepY] == 0) {         
-            newScreen[x][i + stepY] = 1; 
-            counter++;
-            coordY = (i + stepY) * 10;
-            coordX = x * 10;
-            context.fillStyle = '#000';  
-            context.fillRect(coordX,coordY,7,7); 
-          } else if (newScreen[x][i + stepY] == 1) {
-            newScreen[x][i + stepY] = 2;            
-          }
-          console.log("tall=" + tall + ", x=" + x + ", stepY =" + stepY);
-
-          if (newScreen[x][i] == 1) {
-            newScreen[x][i] = 0; 
-            counter--;
-            coordY = i * 10;          
-            context.fillStyle = '#eee';                   
-            context.fillRect(coordX,coordY,7,7); 
-          } else if (newScreen[x][i] == 2) {
-            newScreen[x][i] = 1;           
-          }                  
-        }               
-      }          
-    }
-
-                 
-
-    
-    
+      return result;
+    }    
 
   var input = `rect 1x1
 rotate row y=0 by 7
@@ -196,8 +109,195 @@ rect 1x1
 rotate row y=0 by 5
 rect 1x1
 rotate row y=0 by 5
-`
-
+rect 1x1
+rotate row y=0 by 2
+rect 1x1
+rotate row y=0 by 3
+rect 1x1
+rotate row y=0 by 5
+rect 1x1
+rotate row y=0 by 3
+rect 1x1
+rotate row y=0 by 2
+rect 1x1
+rotate row y=0 by 3
+rect 2x1
+rotate row y=0 by 7
+rect 6x1
+rotate row y=0 by 3
+rect 2x1
+rotate row y=0 by 2
+rect 1x2
+rotate row y=1 by 10
+rotate row y=0 by 3
+rotate column x=0 by 1
+rect 2x1
+rotate column x=20 by 1
+rotate column x=15 by 1
+rotate column x=5 by 1
+rotate row y=1 by 5
+rotate row y=0 by 2
+rect 1x2
+rotate row y=0 by 5
+rotate column x=0 by 1
+rect 4x1
+rotate row y=2 by 15
+rotate row y=0 by 5
+rotate column x=0 by 1
+rect 4x1
+rotate row y=2 by 5
+rotate row y=0 by 5
+rotate column x=0 by 1
+rect 4x1
+rotate row y=2 by 10
+rotate row y=0 by 10
+rotate column x=8 by 1
+rotate column x=5 by 1
+rotate column x=0 by 1
+rect 9x1
+rotate column x=27 by 1
+rotate row y=0 by 5
+rotate column x=0 by 1
+rect 4x1
+rotate column x=42 by 1
+rotate column x=40 by 1
+rotate column x=22 by 1
+rotate column x=17 by 1
+rotate column x=12 by 1
+rotate column x=7 by 1
+rotate column x=2 by 1
+rotate row y=3 by 10
+rotate row y=2 by 5
+rotate row y=1 by 3
+rotate row y=0 by 10
+rect 1x4
+rotate column x=37 by 2
+rotate row y=3 by 18
+rotate row y=2 by 30
+rotate row y=1 by 7
+rotate row y=0 by 2
+rotate column x=13 by 3
+rotate column x=12 by 1
+rotate column x=10 by 1
+rotate column x=7 by 1
+rotate column x=6 by 3
+rotate column x=5 by 1
+rotate column x=3 by 3
+rotate column x=2 by 1
+rotate column x=0 by 1
+rect 14x1
+rotate column x=38 by 3
+rotate row y=3 by 12
+rotate row y=2 by 10
+rotate row y=0 by 10
+rotate column x=7 by 1
+rotate column x=5 by 1
+rotate column x=2 by 1
+rotate column x=0 by 1
+rect 9x1
+rotate row y=4 by 20
+rotate row y=3 by 25
+rotate row y=2 by 10
+rotate row y=0 by 15
+rotate column x=12 by 1
+rotate column x=10 by 1
+rotate column x=8 by 3
+rotate column x=7 by 1
+rotate column x=5 by 1
+rotate column x=3 by 3
+rotate column x=2 by 1
+rotate column x=0 by 1
+rect 14x1
+rotate column x=34 by 1
+rotate row y=1 by 45
+rotate column x=47 by 1
+rotate column x=42 by 1
+rotate column x=19 by 1
+rotate column x=9 by 2
+rotate row y=4 by 7
+rotate row y=3 by 20
+rotate row y=0 by 7
+rotate column x=5 by 1
+rotate column x=3 by 1
+rotate column x=2 by 1
+rotate column x=0 by 1
+rect 6x1
+rotate row y=4 by 8
+rotate row y=3 by 5
+rotate row y=1 by 5
+rotate column x=5 by 1
+rotate column x=4 by 1
+rotate column x=3 by 2
+rotate column x=2 by 1
+rotate column x=1 by 3
+rotate column x=0 by 1
+rect 6x1
+rotate column x=36 by 3
+rotate column x=25 by 3
+rotate column x=18 by 3
+rotate column x=11 by 3
+rotate column x=3 by 4
+rotate row y=4 by 5
+rotate row y=3 by 5
+rotate row y=2 by 8
+rotate row y=1 by 8
+rotate row y=0 by 3
+rotate column x=3 by 4
+rotate column x=0 by 4
+rect 4x4
+rotate row y=4 by 10
+rotate row y=3 by 20
+rotate row y=1 by 10
+rotate row y=0 by 10
+rotate column x=8 by 1
+rotate column x=7 by 1
+rotate column x=6 by 1
+rotate column x=5 by 1
+rotate column x=3 by 1
+rotate column x=2 by 1
+rotate column x=1 by 1
+rotate column x=0 by 1
+rect 9x1
+rotate row y=0 by 40
+rotate column x=44 by 1
+rotate column x=35 by 5
+rotate column x=18 by 5
+rotate column x=15 by 3
+rotate column x=10 by 5
+rotate row y=5 by 15
+rotate row y=4 by 10
+rotate row y=3 by 40
+rotate row y=2 by 20
+rotate row y=1 by 45
+rotate row y=0 by 35
+rotate column x=48 by 1
+rotate column x=47 by 5
+rotate column x=46 by 5
+rotate column x=45 by 1
+rotate column x=43 by 1
+rotate column x=40 by 1
+rotate column x=38 by 2
+rotate column x=37 by 3
+rotate column x=36 by 2
+rotate column x=32 by 2
+rotate column x=31 by 2
+rotate column x=28 by 1
+rotate column x=23 by 3
+rotate column x=22 by 3
+rotate column x=21 by 5
+rotate column x=20 by 1
+rotate column x=18 by 1
+rotate column x=17 by 3
+rotate column x=13 by 1
+rotate column x=10 by 1
+rotate column x=8 by 1
+rotate column x=7 by 5
+rotate column x=6 by 5
+rotate column x=5 by 1
+rotate column x=3 by 5
+rotate column x=2 by 5
+rotate column x=1 by 5
+`;
 
 	</script>
 </head>
