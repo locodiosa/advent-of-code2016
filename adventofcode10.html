@@ -10,38 +10,40 @@
     }    
 
     function getResult() {
-      var result = [];
+      var bots = [];
       input.split("\n").forEach(function(line) {
+
         if (line[0] == "b") {
-          createObjectWithPropety(line);
+          bots.push(createObjectWithPropety(line));          
         } else {
-          createObjectWithValue(line);
-        }
-               
-      });             
-      
-      return result;
+          bots.push(createObjectWithValue(line));
+        }               
+      });
+
+      console.log(bots);  
+          
+      return bots;
      
     }
 
     function createObjectWithPropety(line) {
-      var name = "bot " + line.slice(4, line.indexOf("gives"));
-      
-      name = {
-        propety: console.log(line.slice(line.indexOf("gives")))
-      };      
+      var bot = {
+        name: "bot" + line.slice(4, line.indexOf("gives")),
+        propety: line.slice(line.indexOf("gives"))
+      };  
+
+      return bot;      
     }
 
     function createObjectWithValue(line) {
-      var name = line.slice(line.indexOf("bot"));
-      
-      name = {
-        value: console.log(line.slice(6, line.indexOf("goes")))
-      };      
+      var bot = {
+        name: "bot" + line.slice(line.indexOf("bot") + 4),      
+        value: line.slice(6, line.indexOf("goes"))
+      };  
+
+      return bot;    
     }
 
-
-    
 
 
   var input = `bot 75 gives low to bot 145 and high to bot 95
