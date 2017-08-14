@@ -12,11 +12,33 @@
     function getResult() {
       var bots = [];
       input.split("\n").forEach(function(line) {
+        var numberOfRealBot = 0;
 
-        if (line[0] == "b") {
-          bots.push(createObjectWithPropety(line));          
+        if (line[0] == "b") {    
+          if (bots.length != 0) { 
+            for (var i = 0; i < bots.length; ++i) {                                               
+              if (bots[i].name == "bot" + line.slice(4, line.indexOf("gives") - 1)) {                
+                  numberOfRealBot++;                
+              } 
+            }         
+          }      
+
+          if (numberOfRealBot == 0) {            
+            bots.push(createObjectWithPropety(line));            
+          } 
+                    
         } else {
-          bots.push(createObjectWithValue(line));
+          if (bots.length != 0) { 
+            for (var i = 0; i < bots.length; ++i) {                                               
+              if (bots[i].name == "bot" + line.slice(line.indexOf("bot") + 4)) {                
+                  numberOfRealBot++;                
+              } 
+            }         
+          }      
+
+          if (numberOfRealBot == 0) {          
+            bots.push(createObjectWithValue(line));
+          }
         }               
       });
 
@@ -28,7 +50,7 @@
 
     function createObjectWithPropety(line) {
       var bot = {
-        name: "bot" + line.slice(4, line.indexOf("gives")),
+        name: "bot" + line.slice(4, line.indexOf("gives") - 1),
         propety: line.slice(line.indexOf("gives"))
       };  
 
