@@ -12,41 +12,37 @@
     function getResult() {
       var bots = [];
       input.split("\n").forEach(function(line) {
-        var numberOfRealBot = 0;
+        
+        if (line[0] == "b") {          
 
-        if (line[0] == "b") {    
-          if (bots.length != 0) { 
-            for (var i = 0; i < bots.length; ++i) {                                               
-              if (bots[i].name == "bot" + line.slice(4, line.indexOf("gives") - 1)) {                
-                  numberOfRealBot++;                
-              } 
-            }         
-          }      
-
-          if (numberOfRealBot == 0) {            
+          if (isThereThisBot(bots, line.slice(4, line.indexOf("gives") - 1)) == 0) {            
             bots.push(createObjectWithPropety(line));            
           } 
                     
-        } else {
-          if (bots.length != 0) { 
-            for (var i = 0; i < bots.length; ++i) {                                               
-              if (bots[i].name == "bot" + line.slice(line.indexOf("bot") + 4)) {                
-                  numberOfRealBot++;                
-              } 
-            }         
-          }      
-
-          if (numberOfRealBot == 0) {          
+        } else if (isThereThisBot(bots, line.slice(line.indexOf("bot") + 4)) == 0) {          
             bots.push(createObjectWithValue(line));
-          }
-        }               
+        }                      
       });
 
-      console.log(bots);  
-          
-      return bots;
-     
+      console.log(bots);            
+      return bots;     
     }
+
+
+    function isThereThisBot(bots, numberOfBot) {
+      var quantityOfRealBot = 0;
+
+      if (bots.length != 0) { 
+        for (var i = 0; i < bots.length; ++i) {                                               
+          if (bots[i].name == "bot" + numberOfBot) {                
+            quantityOfRealBot++;                
+          } 
+        }         
+      }
+
+      return quantityOfRealBot;
+    }
+
 
     function createObjectWithPropety(line) {
       var bot = {
@@ -56,6 +52,7 @@
 
       return bot;      
     }
+    
 
     function createObjectWithValue(line) {
       var bot = {
