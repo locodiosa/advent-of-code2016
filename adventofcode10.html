@@ -54,7 +54,8 @@
     function createObjectWithPropety(line) {
       var bot = {
         name: "bot " + line.slice(4, line.indexOf("gives") - 1),
-        propety: line.slice(line.indexOf("gives"))
+        lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
+        highTo: line.slice(line.indexOf("high") + 8)
       };  
 
       return bot;      
@@ -75,11 +76,12 @@
       if (bots.length != 0) { 
         for (var i = 0; i < bots.length; ++i) {                                                      
           if (bots[i].name == "bot " + line.slice(4, line.indexOf("gives") - 1)) {                           
-            bots[i].propety = line.slice(line.indexOf("gives"));            
+            bots[i].lowTo = line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1);  
+            bots[i].highTo = line.slice(line.indexOf("high") + 8);          
           } 
 
           if ((bots[i].value1 != undefined) && (bots[i].value2 != undefined)) {
-            console.log("можно выполнять свойство");
+            doPropety(bots, i);
           } 
         }         
       }
@@ -97,7 +99,7 @@
               bots[i].value2 = parseInt(line.slice(6, line.indexOf("goes")));
 
               if (bots[i].propety != undefined) {
-                console.log("тоже пора");
+                doPropety(bots, i);
               }   
             }              
           } 
@@ -106,8 +108,81 @@
     }
 
 
-    function doPropety(bots, i, line) {
-      
+    function doPropety(bots, i) {
+    console.log("передача value");     
+      if (bots[i].value1 > bots[i].value2) {
+        if (bots[i].highTo.indexOf("output")) {
+          bots[i].value1 = undefined;
+        }
+
+        if (bots[i].lowTo.indexOf("output")) {
+          bots[i].value2 = undefined;
+        }
+
+        for (var j = 0; j < bots.length; ++j) {
+          
+          if (bots[j].name == bots[i].highTo) {
+            
+            if (bots[j].value1 == undefined) {
+              bots[j].value1 = bots[i].value1;
+              console.log("новый value1: " + bots[j].value1);            
+            } else {
+              bots[j].value2 = bots[i].value1;
+              console.log("новый value2: " + bots[j].value2); 
+            }
+
+            bots[i].value1 = undefined;
+
+          } else if (bots[j].name == bots[i].lowTo) {
+              
+              if (bots[j].value1 == undefined) {
+                bots[j].value1 = bots[i].value2;
+                console.log("новый value1: " + bots[j].value1);
+              } else {
+                bots[j].value2 = bots[i].value2;
+                console.log("новый value2: " + bots[j].value2);
+              }
+
+              bots[i].value2 = undefined;
+          }    
+        }
+        
+      } else if (bots[i].value1 < bots[i].value2) {
+        if (bots[i].highTo.indexOf("output")) {
+          bots[i].value2 = undefined;
+        }
+
+        if (bots[i].lowTo.indexOf("output")) {
+          bots[i].value1 = undefined;
+        }
+
+        for (j = 0; j < bots.length; ++j) {
+          if (bots[j].name == bots[i].highTo) {
+            
+            if (bots[j].value1 == undefined) {
+              bots[j].value1 = bots[i].value2;
+              console.log("новый value1: " + bots[j].value1); 
+            } else {
+              bots[j].value2 = bots[i].value2;
+              console.log("новый value2: " + bots[j].value2); 
+            }
+
+            bots[i].value2 = undefined; 
+
+          } else if (bots[j].name == bots[i].lowTo) {
+            
+            if (bots[j].value1 == undefined) {
+              bots[j].value1 = bots[i].value1;
+              console.log("новый value1: " + bots[j].value1);
+            } else {
+              bots[j].value2 = bots[i].value1;
+              console.log("новый value2: " + bots[j].value2);
+            }
+
+            bots[i].value2 = undefined;            
+          }        
+        }        
+      }      
     }
 
 
