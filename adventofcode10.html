@@ -66,7 +66,7 @@
       var bot = {
         name: "bot " + line.slice(line.indexOf("bot") + 4),      
         value1: parseInt(line.slice(6, line.indexOf("goes")))
-      };  
+      };      
 
       return bot;    
     }
@@ -85,23 +85,30 @@
           } 
         }         
       }
-
-
     }
 
     function giveValue(bots, line) {      
       if (bots.length != 0) { 
         for (var i = 0; i < bots.length; ++i) {                                                      
           if (bots[i].name == "bot " + line.slice(line.indexOf("bot") + 4)) {
+            
             if (bots[i].value1 == undefined) {
               bots[i].value1 = parseInt(line.slice(6, line.indexOf("goes")));   
             } else {
-              bots[i].value2 = parseInt(line.slice(6, line.indexOf("goes")));
+              bots[i].value2 = parseInt(line.slice(6, line.indexOf("goes")));                
+            }
 
-              if (bots[i].propety != undefined) {
+            if (bots[i].propety != undefined) {
                 doPropety(bots, i);
-              }   
-            }              
+            }
+
+            if ((bots[i].value1 == 17) || (bots[i].value1 == 61)) {
+              console.log(bots[i].name + ": " + bots[i].value1);
+            }
+
+            if ((bots[i].value2 == 17) || (bots[i].value2 == 61)) {
+              console.log(bots[i].name + ": " + bots[i].value2);
+            }  
           } 
         }         
       }
@@ -109,13 +116,16 @@
 
 
     function doPropety(bots, i) {
-    console.log("передача value");     
-      if (bots[i].value1 > bots[i].value2) {
-        if (bots[i].highTo.indexOf("output")) {
+
+    console.log("передача от бота: " + bots[i].name + " value1: " + bots[i].value1 + " value2: " + bots[i].value2 + " lowTo: " + bots[i].lowTo + " highTo: " + bots[i].highTo);     
+      if ((bots[i].value1 > bots[i].value2) && (bots[i].highTo != undefined) && (bots[i].lowTo != undefined)) {
+        if (bots[i].highTo.indexOf("output") != -1) {
+          console.log(bots[i].name + ": high to " + bots[i].highTo);
           bots[i].value1 = undefined;
         }
 
-        if (bots[i].lowTo.indexOf("output")) {
+        if (bots[i].lowTo.indexOf("output") != -1) {
+          console.log(bots[i].name + ": low to " + bots[i].lowTo);
           bots[i].value2 = undefined;
         }
 
@@ -124,11 +134,9 @@
           if (bots[j].name == bots[i].highTo) {
             
             if (bots[j].value1 == undefined) {
-              bots[j].value1 = bots[i].value1;
-              console.log("новый value1: " + bots[j].value1);            
+              bots[j].value1 = parseInt(bots[i].value1);          
             } else {
-              bots[j].value2 = bots[i].value1;
-              console.log("новый value2: " + bots[j].value2); 
+              bots[j].value2 = parseInt(bots[i].value1); 
             }
 
             bots[i].value1 = undefined;
@@ -136,23 +144,23 @@
           } else if (bots[j].name == bots[i].lowTo) {
               
               if (bots[j].value1 == undefined) {
-                bots[j].value1 = bots[i].value2;
-                console.log("новый value1: " + bots[j].value1);
+                bots[j].value1 = parseInt(bots[i].value2);
               } else {
-                bots[j].value2 = bots[i].value2;
-                console.log("новый value2: " + bots[j].value2);
+                bots[j].value2 = parseInt(bots[i].value2);
               }
 
               bots[i].value2 = undefined;
           }    
         }
         
-      } else if (bots[i].value1 < bots[i].value2) {
-        if (bots[i].highTo.indexOf("output")) {
+      } else if ((bots[i].value1 < bots[i].value2) && (bots[i].highTo != undefined) && (bots[i].lowTo != undefined)) {
+        if (bots[i].highTo.indexOf("output") != -1) {
+          console.log(bots[i].name + ": high to " + bots[i].highTo);
           bots[i].value2 = undefined;
         }
 
-        if (bots[i].lowTo.indexOf("output")) {
+        if (bots[i].lowTo.indexOf("output") != -1) {
+          console.log(bots[i].name + ": low to " + bots[i].lowTo);
           bots[i].value1 = undefined;
         }
 
@@ -160,11 +168,9 @@
           if (bots[j].name == bots[i].highTo) {
             
             if (bots[j].value1 == undefined) {
-              bots[j].value1 = bots[i].value2;
-              console.log("новый value1: " + bots[j].value1); 
+              bots[j].value1 = parseInt(bots[i].value2);
             } else {
-              bots[j].value2 = bots[i].value2;
-              console.log("новый value2: " + bots[j].value2); 
+              bots[j].value2 = parseInt(bots[i].value2);
             }
 
             bots[i].value2 = undefined; 
@@ -172,17 +178,18 @@
           } else if (bots[j].name == bots[i].lowTo) {
             
             if (bots[j].value1 == undefined) {
-              bots[j].value1 = bots[i].value1;
-              console.log("новый value1: " + bots[j].value1);
+              bots[j].value1 = parseInt(bots[i].value1);
             } else {
-              bots[j].value2 = bots[i].value1;
-              console.log("новый value2: " + bots[j].value2);
+              bots[j].value2 = parseInt(bots[i].value1);
             }
 
             bots[i].value2 = undefined;            
           }        
         }        
-      }      
+      }  
+
+      
+      
     }
 
 
