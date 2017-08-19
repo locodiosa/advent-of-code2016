@@ -15,15 +15,15 @@
         
         if (line[0] == "b") {          
 
-          if (isThereThisBot(bots, line.slice(4, line.indexOf("gives") - 1)) == 0) {            
-            bots.push(createObjectWithPropety(line));            
+          if (isThereThisBot(bots, line.slice(4, line.indexOf("gives") - 1)) == 0) {      
+            bots.push(createObjectWithPropety(line));
           } else {           
             givePropety(bots, line);            
           }
                     
         } else {
 
-          if (isThereThisBot(bots, line.slice(line.indexOf("bot") + 4)) == 0) {          
+          if (isThereThisBot(bots, line.slice(line.indexOf("bot") + 4)) == 0) {                 
             bots.push(createObjectWithValue(line));
           } else {           
             giveValue(bots, line);         
@@ -31,7 +31,7 @@
         }           
       });
 
-      console.log(bots);            
+                 
       return bots;     
     }
 
@@ -41,7 +41,7 @@
 
       if (bots.length != 0) { 
         for (var i = 0; i < bots.length; ++i) {                                               
-          if (bots[i].name == "bot " + numberOfBot) {                
+          if (bots[i].name == "bot " + numberOfBot) { 
             quantityOfRealBot++;
           } 
         }         
@@ -66,7 +66,9 @@
       var bot = {
         name: "bot " + line.slice(line.indexOf("bot") + 4),      
         value1: parseInt(line.slice(6, line.indexOf("goes")))
-      };      
+      };
+
+      console.log("name: " + bot.name + " value1: " + bot.value1);      
 
       return bot;    
     }
@@ -75,13 +77,13 @@
     function givePropety(bots, line) {      
       if (bots.length != 0) { 
         for (var i = 0; i < bots.length; ++i) {                                                      
-          if (bots[i].name == "bot " + line.slice(4, line.indexOf("gives") - 1)) {                           
+          if (bots[i].name == "bot " + line.slice(4, line.indexOf("gives") - 1)) {
             bots[i].lowTo = line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1);  
-            bots[i].highTo = line.slice(line.indexOf("high") + 8);          
-          } 
-
-          if ((bots[i].value1 != undefined) && (bots[i].value2 != undefined)) {
-            doPropety(bots, i);
+            bots[i].highTo = line.slice(line.indexOf("high") + 8);                    
+          
+            if ((bots[i].value1 != undefined) && (bots[i].value2 != undefined)) { 
+              doPropety(bots, i);
+            }          
           } 
         }         
       }
@@ -95,11 +97,7 @@
             if (bots[i].value1 == undefined) {
               bots[i].value1 = parseInt(line.slice(6, line.indexOf("goes")));   
             } else {
-              bots[i].value2 = parseInt(line.slice(6, line.indexOf("goes")));                
-            }
-
-            if (bots[i].propety != undefined) {
-                doPropety(bots, i);
+              bots[i].value2 = parseInt(line.slice(6, line.indexOf("goes")));              
             }
 
             if ((bots[i].value1 == 17) || (bots[i].value1 == 61)) {
@@ -109,6 +107,12 @@
             if ((bots[i].value2 == 17) || (bots[i].value2 == 61)) {
               console.log(bots[i].name + ": " + bots[i].value2);
             }  
+
+            if ((bots[i].value2 != undefined) && (bots[i].lowTo != undefined) && (bots[i].highTo != undefined)) {                
+              doPropety(bots, i);
+            }
+
+            
           } 
         }         
       }
@@ -116,9 +120,9 @@
 
 
     function doPropety(bots, i) {
-
     console.log("передача от бота: " + bots[i].name + " value1: " + bots[i].value1 + " value2: " + bots[i].value2 + " lowTo: " + bots[i].lowTo + " highTo: " + bots[i].highTo);     
       if ((bots[i].value1 > bots[i].value2) && (bots[i].highTo != undefined) && (bots[i].lowTo != undefined)) {
+         
         if (bots[i].highTo.indexOf("output") != -1) {
           console.log(bots[i].name + ": high to " + bots[i].highTo);
           bots[i].value1 = undefined;
@@ -132,6 +136,7 @@
         for (var j = 0; j < bots.length; ++j) {
           
           if (bots[j].name == bots[i].highTo) {
+            console.log("name: " + bots[i].name + " value1: " + bots[i].value1);                
             
             if (bots[j].value1 == undefined) {
               bots[j].value1 = parseInt(bots[i].value1);          
@@ -139,7 +144,10 @@
               bots[j].value2 = parseInt(bots[i].value1); 
             }
 
+               console.log("name: " + bots[j].name + " value1: " + bots[j].value1 + " value2: " + bots[j].value2 + " lowTo: " + bots[j].lowTo + " highTo: " + bots[j].highTo);
+
             bots[i].value1 = undefined;
+            console.log("name: " + bots[i].name + " value1: " + bots[i].value1); 
 
           } else if (bots[j].name == bots[i].lowTo) {
               
@@ -188,7 +196,7 @@
         }        
       }  
 
-      
+
       
     }
 
