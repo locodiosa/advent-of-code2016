@@ -13,62 +13,63 @@
       var bots = [];
       input.split("\n").forEach(function(line) {        
         if (line[0] == "b") {          
-          bots.push(createBot(line));               
+          bots[line.slice(4, line.indexOf("gives") - 1)] = createBot(line);               
         }      
       });
 
       input.split("\n").forEach(function(line) {
         if (line[0] == "v") {  
-          giveValue(bots, line);                
-        }      
-      });
+          giveValue(bots, line);   
+          console.log(bots[line.slice(line.indexOf("bot") + 4)].value);
+          
+          if (bots[line.slice(line.indexOf("bot") + 4)].value.length == 2) {
+            console.log("пора начинать");
+            doTransmission(bots);
+          }               
+        }
+
+      });      
                  
       return bots;     
     } 
 
 
     function createBot(line) {
-      var bot = {
-        name: "bot " + line.slice(4, line.indexOf("gives") - 1),
-        lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
-        highTo: line.slice(line.indexOf("high") + 8)
-      };  
+      var bot = {        
+        lowTo: line.slice(line.indexOf("low") + 11, line.indexOf("and") - 1),
+        highTo: line.slice(line.indexOf("high") + 12),
+        value: []
+      };
 
       return bot;      
     }
 
-    function giveValue(bots, line) {      
-      if (bots.length != 0) { 
-        for (var i = 0; i < bots.length; ++i) {                                                      
-          if (bots[i].name == "bot " + line.slice(line.indexOf("bot") + 4)) {
-            
-            if (bots[i].value1 == undefined) {
-              bots[i].value1 = parseInt(line.slice(6, line.indexOf("goes")));   
-            } else {
-              bots[i].value2 = parseInt(line.slice(6, line.indexOf("goes")));              
-            }
+    function giveValue(bots, line) {            
+      bots[line.slice(line.indexOf("bot") + 4)].value.push(parseInt(line.slice(6, line.indexOf("goes"))));
+     
 
-            if ((bots[i].value1 == 17) || (bots[i].value1 == 61)) {
-              console.log(bots[i].name + ": " + bots[i].value1);
-            }
-
-            if ((bots[i].value2 == 17) || (bots[i].value2 == 61)) {
-              console.log(bots[i].name + ": " + bots[i].value2);
-            }  
-
-            if ((bots[i].value2 != undefined) && (bots[i].lowTo != undefined) && (bots[i].highTo != undefined)) {                
-              doPropety(bots, i);
-            }
-
-            
-          } 
-        }         
+      /*if ((bots[line.slice(line.indexOf("bot") + 4)].value1 == 17) || (bots[line.slice(line.indexOf("bot") + 4)].value1 == 61)) {
+        console.log(line.slice(line.indexOf("bot") + 4) + ": " + bots[line.slice(line.indexOf("bot") + 4)].value1);
       }
+
+      if ((bots[line.slice(line.indexOf("bot") + 4)].value2 == 17) || (bots[line.slice(line.indexOf("bot") + 4)].value2 == 61)) {
+        console.log(line.slice(line.indexOf("bot") + 4) + ": " + bots[line.slice(line.indexOf("bot") + 4)].value2);
+      }
+ 
+
+          /*if ((bots[i].value2 != undefined) && (bots[i].lowTo != undefined) && (bots[i].highTo != undefined)) {                
+            doPropety(bots, i);
+          }*/         
+    }
+
+    function doTransmission(bots) {
+      
     }
 
 
-    function doPropety(bots, i) {
-    console.log("передача от бота: " + bots[i].name + " value1: " + bots[i].value1 + " value2: " + bots[i].value2 + " lowTo: " + bots[i].lowTo + " highTo: " + bots[i].highTo);     
+    function doPropety(bots) {
+      console.log("передача от бота: " + bots[i].name + " value1: " + bots[i].value1 + " value2: " + bots[i].value2 + " lowTo: " + bots[i].lowTo + " highTo: " + bots[i].highTo);     
+
       if ((bots[i].value1 > bots[i].value2) && (bots[i].highTo != undefined) && (bots[i].lowTo != undefined)) {
          
         if (bots[i].highTo.indexOf("output") != -1) {
