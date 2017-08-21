@@ -11,47 +11,23 @@
 
     function getResult() {
       var bots = [];
-      input.split("\n").forEach(function(line) {
-        
+      input.split("\n").forEach(function(line) {        
         if (line[0] == "b") {          
-
-          if (isThereThisBot(bots, line.slice(4, line.indexOf("gives") - 1)) == 0) {      
-            bots.push(createObjectWithPropety(line));
-          } else {           
-            givePropety(bots, line);            
-          }
-                    
-        } else {
-
-          if (isThereThisBot(bots, line.slice(line.indexOf("bot") + 4)) == 0) {                 
-            bots.push(createObjectWithValue(line));
-          } else {           
-            giveValue(bots, line);         
-          }        
-        }           
+          bots.push(createBot(line));               
+        }      
       });
 
+      input.split("\n").forEach(function(line) {
+        if (line[0] == "v") {  
+          giveValue(bots, line);                
+        }      
+      });
                  
       return bots;     
-    }
+    } 
 
 
-    function isThereThisBot(bots, numberOfBot) {
-      var quantityOfRealBot = 0;
-
-      if (bots.length != 0) { 
-        for (var i = 0; i < bots.length; ++i) {                                               
-          if (bots[i].name == "bot " + numberOfBot) { 
-            quantityOfRealBot++;
-          } 
-        }         
-      }
-
-      return quantityOfRealBot;
-    }
-
-
-    function createObjectWithPropety(line) {
+    function createBot(line) {
       var bot = {
         name: "bot " + line.slice(4, line.indexOf("gives") - 1),
         lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
@@ -59,34 +35,6 @@
       };  
 
       return bot;      
-    }
-
-
-    function createObjectWithValue(line) {
-      var bot = {
-        name: "bot " + line.slice(line.indexOf("bot") + 4),      
-        value1: parseInt(line.slice(6, line.indexOf("goes")))
-      };
-
-      console.log("name: " + bot.name + " value1: " + bot.value1);      
-
-      return bot;    
-    }
-
-
-    function givePropety(bots, line) {      
-      if (bots.length != 0) { 
-        for (var i = 0; i < bots.length; ++i) {                                                      
-          if (bots[i].name == "bot " + line.slice(4, line.indexOf("gives") - 1)) {
-            bots[i].lowTo = line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1);  
-            bots[i].highTo = line.slice(line.indexOf("high") + 8);                    
-          
-            if ((bots[i].value1 != undefined) && (bots[i].value2 != undefined)) { 
-              doPropety(bots, i);
-            }          
-          } 
-        }         
-      }
     }
 
     function giveValue(bots, line) {      
@@ -194,10 +142,7 @@
             bots[i].value2 = undefined;            
           }        
         }        
-      }  
-
-
-      
+      }        
     }
 
 
