@@ -13,19 +13,17 @@
       var bots = [];
       input.split("\n").forEach(function(line) {        
         if (line[0] == "b") {          
-          bots[line.slice(4, line.indexOf("gives") - 1)] = createBot(line);               
+          bots[parseInt(line.slice(4, line.indexOf("gives") - 1))] = createBot(line);               
         }      
       });
 
       input.split("\n").forEach(function(line) {
         if (line[0] == "v") {  
           giveValue(bots, line);   
-          console.log(bots[line.slice(line.indexOf("bot") + 4)].value);
-          
-          if (bots[line.slice(line.indexOf("bot") + 4)].value.length == 2) {
-            console.log("пора начинать");
-            doTransmission(bots);
-          }               
+         
+         
+            doTransmission(bots, parseInt(line.slice(line.indexOf("bot") + 4)));
+                      
         }
 
       });      
@@ -36,34 +34,67 @@
 
     function createBot(line) {
       var bot = {        
-        lowTo: line.slice(line.indexOf("low") + 11, line.indexOf("and") - 1),
-        highTo: line.slice(line.indexOf("high") + 12),
-        value: []
+        lowTo: parseInt(line.slice(line.indexOf("low") + 11, line.indexOf("and") - 1)),
+        highTo: parseInt(line.slice(line.indexOf("high") + 12)),
+        value: [],
+        result: []
       };
 
       return bot;      
     }
 
     function giveValue(bots, line) {            
-      bots[line.slice(line.indexOf("bot") + 4)].value.push(parseInt(line.slice(6, line.indexOf("goes"))));
-     
-
-      /*if ((bots[line.slice(line.indexOf("bot") + 4)].value1 == 17) || (bots[line.slice(line.indexOf("bot") + 4)].value1 == 61)) {
-        console.log(line.slice(line.indexOf("bot") + 4) + ": " + bots[line.slice(line.indexOf("bot") + 4)].value1);
-      }
-
-      if ((bots[line.slice(line.indexOf("bot") + 4)].value2 == 17) || (bots[line.slice(line.indexOf("bot") + 4)].value2 == 61)) {
-        console.log(line.slice(line.indexOf("bot") + 4) + ": " + bots[line.slice(line.indexOf("bot") + 4)].value2);
-      }
- 
-
-          /*if ((bots[i].value2 != undefined) && (bots[i].lowTo != undefined) && (bots[i].highTo != undefined)) {                
-            doPropety(bots, i);
-          }*/         
+      bots[parseInt(line.slice(line.indexOf("bot") + 4))].value.push(parseInt(line.slice(6, line.indexOf("goes"))));
     }
 
-    function doTransmission(bots) {
-      
+    function doTransmission(bots, i) {     
+      if (bots[i].value.length == 2) {
+        if (bots[i].value.indexOf(17)) {
+          bots[i].result.push(17);         
+        } else if (bots[i].value.indexOf(61)) {
+          bots[i].result.push(61);
+        }
+
+        if (bots[i].result.length == 2) {
+          console.log(i + ": " + bots[i].result);
+        }
+
+        if (bots[i].value[0] > bots[i].value[1]) {
+          if (bots[i].highTo == NaN) {
+            bots[i].value.splice(0, 1);
+          } 
+
+          if (bots[i].lowTo == NaN) {
+            bots[i].value.splice(1, 1);
+          } 
+
+          if ((bots[i].highTo != NaN) && (bots[i].lowTo != NaN)) {
+            bots[bots[i].highTo].value.push(bots[i].value[0]);                     
+            bots[bots[i].lowTo].value.push(bots[i].value[1]);
+            doTransmission(bots, bots[i].highTo);
+            doTransmission(bots, bots[i].lowTo);
+          }
+          
+        } else {
+
+          if (bots[i].highTo == NaN) {
+            bots[i].value.splice(1, 1);
+          } 
+
+          if (bots[i].lowTo == NaN) {
+            bots[i].value.splice(0, 1);
+          }
+
+          if ((bots[i].highTo != NaN) && (bots[i].lowTo != NaN)) {
+            bots[bots[i].highTo].value.push(bots[i].value[1]);
+            bots[bots[i].lowTo].value.push(bots[i].value[0]);
+            doTransmission(bots, bots[i].highTo);
+            doTransmission(bots, bots[i].lowTo);
+          }          
+        }
+
+        bots[i].value.splice(0, 2);
+      }
     }
 
 
