@@ -20,13 +20,16 @@
       input.split("\n").forEach(function(line) {
         if (line[0] == "v") {  
           giveValue(bots, line);   
-         
-         
-            doTransmission(bots, parseInt(line.slice(line.indexOf("bot") + 4)));
-                      
-        }
+          doTransmission(bots, parseInt(line.slice(line.indexOf("bot") + 4)));                      
+        }     
+      }); 
 
-      });      
+      bots[1000] = {
+        lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
+        highTo: line.slice(line.indexOf("high") + 8),
+        value: [],
+        result: []
+      };     
                  
       return bots;     
     } 
@@ -34,11 +37,23 @@
 
     function createBot(line) {
       var bot = {        
-        lowTo: parseInt(line.slice(line.indexOf("low") + 11, line.indexOf("and") - 1)),
-        highTo: parseInt(line.slice(line.indexOf("high") + 12)),
+        lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
+        highTo: line.slice(line.indexOf("high") + 8),
         value: [],
         result: []
       };
+
+      if (bot.highTo.indexOf("output") != -1) {
+        bot.highTo = 1000;
+      } else {
+        bot.highTo = parseInt(line.slice(line.indexOf("high") + 12));
+      }
+
+      if (bot.lowTo.indexOf("output") != -1) {
+        bot.lowTo = 1000;
+      } else {
+        bot.lowTo = parseInt(line.slice(line.indexOf("low") + 11, line.indexOf("and") - 1))
+      }      
 
       return bot;      
     }
@@ -48,144 +63,72 @@
     }
 
     function doTransmission(bots, i) {     
-      if (bots[i].value.length == 2) {
-        if (bots[i].value.indexOf(17)) {
-          bots[i].result.push(17);         
-        } else if (bots[i].value.indexOf(61)) {
-          bots[i].result.push(61);
-        }
+      if (bots[i].value.length == 2) {   
+        findResultNumers(bots, i);
 
-        if (bots[i].result.length == 2) {
-          console.log(i + ": " + bots[i].result);
-        }
+        if (bots[i].value[0] > bots[i].value[1]) {          
+          bots[bots[i].highTo].value.push(bots[i].value[0]); 
 
-        if (bots[i].value[0] > bots[i].value[1]) {
-          if (bots[i].highTo == NaN) {
-            bots[i].value.splice(0, 1);
-          } 
-
-          if (bots[i].lowTo == NaN) {
-            bots[i].value.splice(1, 1);
-          } 
-
-          if ((bots[i].highTo != NaN) && (bots[i].lowTo != NaN)) {
-            bots[bots[i].highTo].value.push(bots[i].value[0]);                     
-            bots[bots[i].lowTo].value.push(bots[i].value[1]);
-            doTransmission(bots, bots[i].highTo);
-            doTransmission(bots, bots[i].lowTo);
-          }
+          console.log(i + "bots[i].lowTo = " + bots[i].lowTo);
+          console.log(i + "bots[bots[i].lowTo].value = " + bots[bots[i].lowTo].value);    
+                                 
+          bots[bots[i].lowTo].value.push(bots[i].value[1]);
+          doTransmission(bots, bots[i].highTo); 
+          doTransmission(bots, bots[i].lowTo);           
+          bots[i].value.splice(0, 2);       
           
-        } else {
-
-          if (bots[i].highTo == NaN) {
-            bots[i].value.splice(1, 1);
-          } 
-
-          if (bots[i].lowTo == NaN) {
-            bots[i].value.splice(0, 1);
-          }
-
-          if ((bots[i].highTo != NaN) && (bots[i].lowTo != NaN)) {
-            bots[bots[i].highTo].value.push(bots[i].value[1]);
-            bots[bots[i].lowTo].value.push(bots[i].value[0]);
-            doTransmission(bots, bots[i].highTo);
-            doTransmission(bots, bots[i].lowTo);
-          }          
-        }
-
-        bots[i].value.splice(0, 2);
+        } else if (bots[i].value[1] > bots[i].value[0]){
+          bots[bots[i].highTo].value.push(bots[i].value[1]);
+          bots[bots[i].lowTo].value.push(bots[i].value[0]);
+          doTransmission(bots, bots[i].highTo);
+          doTransmission(bots, bots[i].lowTo);
+          bots[i].value.splice(0, 2);                             
+        }        
       }
     }
 
+    function findResultNumers(bots, i) {
+      if (bots[i].value.indexOf(17)) {
+        bots[i].result.push(17);         
+      } else if (bots[i].value.indexOf(61)) {
+        bots[i].result.push(61);
+      }
 
-    function doPropety(bots) {
-      console.log("передача от бота: " + bots[i].name + " value1: " + bots[i].value1 + " value2: " + bots[i].value2 + " lowTo: " + bots[i].lowTo + " highTo: " + bots[i].highTo);     
-
-      if ((bots[i].value1 > bots[i].value2) && (bots[i].highTo != undefined) && (bots[i].lowTo != undefined)) {
-         
-        if (bots[i].highTo.indexOf("output") != -1) {
-          console.log(bots[i].name + ": high to " + bots[i].highTo);
-          bots[i].value1 = undefined;
-        }
-
-        if (bots[i].lowTo.indexOf("output") != -1) {
-          console.log(bots[i].name + ": low to " + bots[i].lowTo);
-          bots[i].value2 = undefined;
-        }
-
-        for (var j = 0; j < bots.length; ++j) {
-          
-          if (bots[j].name == bots[i].highTo) {
-            console.log("name: " + bots[i].name + " value1: " + bots[i].value1);                
-            
-            if (bots[j].value1 == undefined) {
-              bots[j].value1 = parseInt(bots[i].value1);          
-            } else {
-              bots[j].value2 = parseInt(bots[i].value1); 
-            }
-
-               console.log("name: " + bots[j].name + " value1: " + bots[j].value1 + " value2: " + bots[j].value2 + " lowTo: " + bots[j].lowTo + " highTo: " + bots[j].highTo);
-
-            bots[i].value1 = undefined;
-            console.log("name: " + bots[i].name + " value1: " + bots[i].value1); 
-
-          } else if (bots[j].name == bots[i].lowTo) {
-              
-              if (bots[j].value1 == undefined) {
-                bots[j].value1 = parseInt(bots[i].value2);
-              } else {
-                bots[j].value2 = parseInt(bots[i].value2);
-              }
-
-              bots[i].value2 = undefined;
-          }    
-        }
-        
-      } else if ((bots[i].value1 < bots[i].value2) && (bots[i].highTo != undefined) && (bots[i].lowTo != undefined)) {
-        if (bots[i].highTo.indexOf("output") != -1) {
-          console.log(bots[i].name + ": high to " + bots[i].highTo);
-          bots[i].value2 = undefined;
-        }
-
-        if (bots[i].lowTo.indexOf("output") != -1) {
-          console.log(bots[i].name + ": low to " + bots[i].lowTo);
-          bots[i].value1 = undefined;
-        }
-
-        for (j = 0; j < bots.length; ++j) {
-          if (bots[j].name == bots[i].highTo) {
-            
-            if (bots[j].value1 == undefined) {
-              bots[j].value1 = parseInt(bots[i].value2);
-            } else {
-              bots[j].value2 = parseInt(bots[i].value2);
-            }
-
-            bots[i].value2 = undefined; 
-
-          } else if (bots[j].name == bots[i].lowTo) {
-            
-            if (bots[j].value1 == undefined) {
-              bots[j].value1 = parseInt(bots[i].value1);
-            } else {
-              bots[j].value2 = parseInt(bots[i].value1);
-            }
-
-            bots[i].value2 = undefined;            
-          }        
-        }        
-      }        
+      if (bots[i].result.length == 2) {
+        console.log(i + ": " + bots[i].result);
+      }
     }
 
+    function doOutput_0(bots, i) {
+      if (bots[i].highTo == 1000) {           
+        bots[i].value.splice(0, 1);
+        console.log(i + ": highTo: " + bots[i].highTo + " value: " + bots[i].value);
+      } 
 
+      if (bots[i].lowTo == 1000) {
+        bots[i].value.splice(1, 1);
+        console.log(i + ": lowTo: " + bots[i].lowTo + " value: " + bots[i].value);
+      }
+    }
 
+    function doOutput_1(bots, i) {
+      if (bots[i].highTo == 1000) {            
+        bots[i].value.splice(1, 1);
+        console.log(i + ": highTo: " + bots[i].highTo + " value: " + bots[i].value);
+      } 
 
-
+      if (bots[i].lowTo == 1000) {
+        bots[i].value.splice(0, 1);
+        console.log(i + ": lowTo: " + bots[i].lowTo + " value: " + bots[i].value);
+      }
+    }
+     
     
 
 
 
   var input = `bot 75 gives low to bot 145 and high to bot 95
+    }
 bot 116 gives low to bot 157 and high to bot 197
 bot 185 gives low to bot 57 and high to bot 139
 bot 202 gives low to bot 105 and high to bot 209
