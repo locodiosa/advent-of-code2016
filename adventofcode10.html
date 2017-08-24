@@ -7,9 +7,11 @@
     
     function calc() {      
       document.getElementById("result").innerHTML = getResult();      
-    }    
+    }
 
-    function getResult() {
+    var result = 0;    
+
+    function getResult() {      
       var bots = [];
       input.split("\n").forEach(function(line) {        
         if (line[0] == "b") {          
@@ -17,21 +19,20 @@
         }      
       });
 
+      bots[1000] = {
+        lowTo: 1000,
+        highTo: 1000,
+        value: [],
+      };    
+
       input.split("\n").forEach(function(line) {
         if (line[0] == "v") {  
           giveValue(bots, line);   
           doTransmission(bots, parseInt(line.slice(line.indexOf("bot") + 4)));                      
         }     
-      }); 
-
-      bots[1000] = {
-        lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
-        highTo: line.slice(line.indexOf("high") + 8),
-        value: [],
-        result: []
-      };     
+      });       
                  
-      return bots;     
+      return result;     
     } 
 
 
@@ -40,7 +41,6 @@
         lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
         highTo: line.slice(line.indexOf("high") + 8),
         value: [],
-        result: []
       };
 
       if (bot.highTo.indexOf("output") != -1) {
@@ -64,68 +64,30 @@
 
     function doTransmission(bots, i) {     
       if (bots[i].value.length == 2) {   
-        findResultNumers(bots, i);
+        findResultBot(bots, i);
 
-        if (bots[i].value[0] > bots[i].value[1]) {          
-          bots[bots[i].highTo].value.push(bots[i].value[0]); 
-
-          console.log(i + "bots[i].lowTo = " + bots[i].lowTo);
-          console.log(i + "bots[bots[i].lowTo].value = " + bots[bots[i].lowTo].value);    
-                                 
-          bots[bots[i].lowTo].value.push(bots[i].value[1]);
-          doTransmission(bots, bots[i].highTo); 
-          doTransmission(bots, bots[i].lowTo);           
-          bots[i].value.splice(0, 2);       
-          
+        if (bots[i].value[0] > bots[i].value[1]) {
+          bots[bots[i].highTo].value.push(bots[i].value[0]);
+          bots[bots[i].lowTo].value.push(bots[i].value[1]);          
+          bots[i].value.splice(0, 2);
+          doTransmission(bots, bots[i].highTo);
+          doTransmission(bots, bots[i].lowTo);  
+               
         } else if (bots[i].value[1] > bots[i].value[0]){
           bots[bots[i].highTo].value.push(bots[i].value[1]);
           bots[bots[i].lowTo].value.push(bots[i].value[0]);
+          bots[i].value.splice(0, 2);
           doTransmission(bots, bots[i].highTo);
-          doTransmission(bots, bots[i].lowTo);
-          bots[i].value.splice(0, 2);                             
+          doTransmission(bots, bots[i].lowTo);                        
         }        
       }
     }
 
-    function findResultNumers(bots, i) {
-      if (bots[i].value.indexOf(17)) {
-        bots[i].result.push(17);         
-      } else if (bots[i].value.indexOf(61)) {
-        bots[i].result.push(61);
-      }
-
-      if (bots[i].result.length == 2) {
-        console.log(i + ": " + bots[i].result);
+    function findResultBot(bots, i) {
+      if ((bots[i].value.indexOf(17) != -1) && (bots[i].value.indexOf(61) != -1)) {
+        result = i;        
       }
     }
-
-    function doOutput_0(bots, i) {
-      if (bots[i].highTo == 1000) {           
-        bots[i].value.splice(0, 1);
-        console.log(i + ": highTo: " + bots[i].highTo + " value: " + bots[i].value);
-      } 
-
-      if (bots[i].lowTo == 1000) {
-        bots[i].value.splice(1, 1);
-        console.log(i + ": lowTo: " + bots[i].lowTo + " value: " + bots[i].value);
-      }
-    }
-
-    function doOutput_1(bots, i) {
-      if (bots[i].highTo == 1000) {            
-        bots[i].value.splice(1, 1);
-        console.log(i + ": highTo: " + bots[i].highTo + " value: " + bots[i].value);
-      } 
-
-      if (bots[i].lowTo == 1000) {
-        bots[i].value.splice(0, 1);
-        console.log(i + ": lowTo: " + bots[i].lowTo + " value: " + bots[i].value);
-      }
-    }
-     
-    
-
-
 
   var input = `bot 75 gives low to bot 145 and high to bot 95
     }
