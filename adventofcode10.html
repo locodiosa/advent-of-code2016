@@ -23,7 +23,25 @@
         lowTo: 1000,
         highTo: 1000,
         value: [],
-      };    
+      };
+
+      bots[100000] = {
+        lowTo: 1000,
+        highTo: 1000,
+        value: [],
+      };
+
+      bots[10000] = {
+        lowTo: 1000,
+        highTo: 1000,
+        value: [],
+      }; 
+
+      bots[20000] = {
+        lowTo: 1000,
+        highTo: 1000,
+        value: [],
+      };         
 
       input.split("\n").forEach(function(line) {
         if (line[0] == "v") {  
@@ -43,13 +61,25 @@
         value: [],
       };
 
-      if (bot.highTo.indexOf("output") != -1) {
+      if (bot.highTo.indexOf("output 0") != -1) {
+        bot.highTo = 100000;
+      } else if (bot.highTo.indexOf("output 1") != -1) {
+        bot.highTo = 10000;
+      } else if (bot.highTo.indexOf("output 2") != -1) {
+        bot.highTo = 20000;
+      } else if (bot.highTo.indexOf("output") != -1) {
         bot.highTo = 1000;
       } else {
         bot.highTo = parseInt(line.slice(line.indexOf("high") + 12));
       }
 
-      if (bot.lowTo.indexOf("output") != -1) {
+      if (bot.lowTo.indexOf("output 0") != -1) {
+        bot.lowTo = 100000;
+      } else if (bot.lowTo.indexOf("output 1") != -1) {
+        bot.lowTo = 10000;
+      } else if (bot.lowTo.indexOf("output 2") != -1) {
+        bot.lowTo = 20000;
+      } else if (bot.lowTo.indexOf("output") != -1) {
         bot.lowTo = 1000;
       } else {
         bot.lowTo = parseInt(line.slice(line.indexOf("low") + 11, line.indexOf("and") - 1))
@@ -81,12 +111,27 @@
           doTransmission(bots, bots[i].lowTo);                        
         }        
       }
+      doMultiply0(bots);
+      doMultiply1(bots);
+      doMultiply2(bots);
     }
 
     function findResultBot(bots, i) {
       if ((bots[i].value.indexOf(17) != -1) && (bots[i].value.indexOf(61) != -1)) {
         result = i;        
       }
+    }
+
+    function doMultiply0(bots) {
+      console.log(bots[100000].value);
+    }
+
+    function doMultiply1(bots) {
+      console.log(bots[10000].value);
+    }
+
+    function doMultiply2(bots) {
+      console.log(bots[20000].value);
     }
 
   var input = `bot 75 gives low to bot 145 and high to bot 95
