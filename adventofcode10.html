@@ -13,35 +13,17 @@
 
     function getResult() {      
       var bots = [];
+
       input.split("\n").forEach(function(line) {        
         if (line[0] == "b") {          
           bots[parseInt(line.slice(4, line.indexOf("gives") - 1))] = createBot(line);               
         }      
       });
 
-      bots[1000] = {
-        lowTo: 1000,
-        highTo: 1000,
-        value: [],
-      };
-
-      bots[100000] = {
-        lowTo: 1000,
-        highTo: 1000,
-        value: [],
-      };
-
-      bots[10000] = {
-        lowTo: 1000,
-        highTo: 1000,
-        value: [],
-      }; 
-
-      bots[20000] = {
-        lowTo: 1000,
-        highTo: 1000,
-        value: [],
-      };         
+      createOutput(bots, 1000);
+      createOutput(bots, 100000);
+      createOutput(bots, 10000);
+      createOutput(bots, 20000);           
 
       input.split("\n").forEach(function(line) {
         if (line[0] == "v") {  
@@ -50,7 +32,7 @@
         }     
       });       
                  
-      return result;     
+      return result + ", " + doMultiply0(bots);     
     } 
 
 
@@ -59,6 +41,7 @@
         lowTo: line.slice(line.indexOf("low") + 7, line.indexOf("and") - 1),
         highTo: line.slice(line.indexOf("high") + 8),
         value: [],
+        findResult: []
       };
 
       if (bot.highTo.indexOf("output 0") != -1) {
@@ -88,54 +71,73 @@
       return bot;      
     }
 
+    function createOutput(bots, number) {
+      bots[number] = {
+        lowTo: 1000,
+        highTo: 1000,
+        value: [],
+        findResult: []
+      };
+    }
+
     function giveValue(bots, line) {            
       bots[parseInt(line.slice(line.indexOf("bot") + 4))].value.push(parseInt(line.slice(6, line.indexOf("goes"))));
     }
 
     function doTransmission(bots, i) {     
-      if (bots[i].value.length == 2) {   
-        findResultBot(bots, i);
+      if (bots[i].value.length == 2) {
+        findResultNumbers(bots, i);         
 
         if (bots[i].value[0] > bots[i].value[1]) {
           bots[bots[i].highTo].value.push(bots[i].value[0]);
           bots[bots[i].lowTo].value.push(bots[i].value[1]);          
-          bots[i].value.splice(0, 2);
+          bots[i].value.pop();
+          bots[i].value.pop();
           doTransmission(bots, bots[i].highTo);
           doTransmission(bots, bots[i].lowTo);  
                
         } else if (bots[i].value[1] > bots[i].value[0]){
           bots[bots[i].highTo].value.push(bots[i].value[1]);
           bots[bots[i].lowTo].value.push(bots[i].value[0]);
-          bots[i].value.splice(0, 2);
+          bots[i].value.pop();
+          bots[i].value.pop();
           doTransmission(bots, bots[i].highTo);
           doTransmission(bots, bots[i].lowTo);                        
         }        
       }
+      
       doMultiply0(bots);
       doMultiply1(bots);
       doMultiply2(bots);
-    }
+    }    
 
-    function findResultBot(bots, i) {
-      if ((bots[i].value.indexOf(17) != -1) && (bots[i].value.indexOf(61) != -1)) {
-        result = i;        
+    function findResultNumbers(bots, i) {
+      if (bots[i].value.indexOf(17) != - 1) {
+       bots[i].findResult.push(17);            
+      } 
+
+      if (bots[i].value.indexOf(61) != - 1) {
+        bots[i].findResult.push(61);       
+      }
+
+      if (bots[i].findResult.length == 2) {
+        result = i;
       }
     }
 
     function doMultiply0(bots) {
-      console.log(bots[100000].value);
+      //console.log(bots[100000].value);
     }
 
     function doMultiply1(bots) {
-      console.log(bots[10000].value);
+      //console.log(bots[10000].value);
     }
 
     function doMultiply2(bots) {
-      console.log(bots[20000].value);
+      //console.log(bots[20000].value);
     }
 
   var input = `bot 75 gives low to bot 145 and high to bot 95
-    }
 bot 116 gives low to bot 157 and high to bot 197
 bot 185 gives low to bot 57 and high to bot 139
 bot 202 gives low to bot 105 and high to bot 209
