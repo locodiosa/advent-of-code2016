@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+    
+    function calc() {      
+      document.getElementById("result").innerHTML = getResult();      
+    }  
+
+    var e = [];      
+    var floor1 = ["sg", "sm", "pg", "pm"];
+    var floor2 = ["tg", "rg", "rm", "cg", "cm"];
+    var floor3 = ["tm"];
+    var floor4 = [];    
+
+    function getResult() { 
+      bring();
+      console.log(e);
+    } 
+
+    function bring() {
+      e = floor1.splice(randomInteger(0, floor1.length - 1), randomInteger(1, 2));        
+      
+      if (e.length == 2) {
+        if (((e.indexOf("sg") != -1) && (e.indexOf("pm") != -1)) ||
+            ((e.indexOf("sm") != -1) && (e.indexOf("pg") != -1))){
+          bring();
+        }
+      } 
+      return e;
+    }
+
+    function randomInteger(min, max) {
+      var rand = min - 0.5 + Math.random() * (max - min + 1)
+      rand = Math.round(rand);
+      return rand;
+    }
+
+    function checkCompatibility() {
+
+    }
+
+
+
+
+  var input = `The first floor contains a strontium generator, a strontium-compatible microchip, a plutonium generator, and a plutonium-compatible microchip.
+The second floor contains a thulium generator, a ruthenium generator, a ruthenium-compatible microchip, a curium generator, and a curium-compatible microchip.
+The third floor contains a thulium-compatible microchip.
+The fourth floor contains nothing relevant.`
+	</script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>
+</body>
+</html>
