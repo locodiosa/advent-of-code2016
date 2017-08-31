@@ -16,31 +16,100 @@
     var floor4 = [];    
 
     function getResult() { 
-      bring();
-      console.log(e);
+      move();
+      
     } 
 
     function bring() {
-      e = floor1.splice(randomInteger(0, floor1.length - 1), randomInteger(1, 2));        
+      e = floor1.splice(randomInteger(0, floor1.length - 1), randomInteger(1, 2));          
       
       if (e.length == 2) {
-        if (((e.indexOf("sg") != -1) && (e.indexOf("pm") != -1)) ||
-            ((e.indexOf("sm") != -1) && (e.indexOf("pg") != -1))){
-          bring();
-        }
+        checkCompatibility();
       } 
       return e;
     }
 
+    function move() {
+      var floor2New = floor2;
+      floor2New.push(bring());
+      floor2New = floor2New.join().split(",");
+
+      if (checkCompatibilityOnFloor(floor2New) == true) {        
+        console.log("move");
+
+      } else {
+        floor2 = floor2New;
+        console.log(floor2New + " = " + floor2);
+      }      
+    }
+
     function randomInteger(min, max) {
-      var rand = min - 0.5 + Math.random() * (max - min + 1)
+      var rand = min - 0.5 + Math.random() * (max - min + 1);
       rand = Math.round(rand);
       return rand;
     }
 
     function checkCompatibility() {
-
+      if (((e.indexOf("tg") != -1) && (e.indexOf("rm") != -1)) ||
+          ((e.indexOf("tg") != -1) && (e.indexOf("cm") != -1)) ||
+          ((e.indexOf("tg") != -1) && (e.indexOf("sm") != -1)) ||
+          ((e.indexOf("tg") != -1) && (e.indexOf("pm") != -1)) ||
+          ((e.indexOf("rg") != -1) && (e.indexOf("tm") != -1)) ||
+          ((e.indexOf("rg") != -1) && (e.indexOf("cm") != -1)) ||
+          ((e.indexOf("rg") != -1) && (e.indexOf("sm") != -1)) ||
+          ((e.indexOf("rg") != -1) && (e.indexOf("pm") != -1)) ||
+          ((e.indexOf("cg") != -1) && (e.indexOf("rm") != -1)) ||
+          ((e.indexOf("cg") != -1) && (e.indexOf("tm") != -1)) ||
+          ((e.indexOf("cg") != -1) && (e.indexOf("sm") != -1)) ||
+          ((e.indexOf("cg") != -1) && (e.indexOf("pm") != -1)) ||
+          ((e.indexOf("sg") != -1) && (e.indexOf("rm") != -1)) ||
+          ((e.indexOf("sg") != -1) && (e.indexOf("tm") != -1)) ||
+          ((e.indexOf("sg") != -1) && (e.indexOf("cm") != -1)) ||
+          ((e.indexOf("sg") != -1) && (e.indexOf("pm") != -1)) ||
+          ((e.indexOf("pg") != -1) && (e.indexOf("rm") != -1)) ||
+          ((e.indexOf("pg") != -1) && (e.indexOf("tm") != -1)) ||
+          ((e.indexOf("pg") != -1) && (e.indexOf("cm") != -1)) ||
+          ((e.indexOf("pg") != -1) && (e.indexOf("sm") != -1))){
+        bring();
+      }
     }
+
+  function checkCompatibilityOnFloor(floor) {
+    if (((floor.indexOf("tg") != -1) && (floor.indexOf("tm") == -1)) && 
+      (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
+       ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
+       ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
+       ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
+
+      ((floor.indexOf("rg") != -1) && (floor.indexOf("rm") == -1)) && 
+      (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
+       ((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)) || 
+       ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
+       ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
+
+      ((floor.indexOf("cg") != -1) && (floor.indexOf("cm") == -1)) && 
+      (((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)) || 
+       ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
+       ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
+       ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
+
+      ((floor.indexOf("sg") != -1) && (floor.indexOf("sm") == -1)) && 
+      (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
+       ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
+       ((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)) || 
+       ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
+
+      ((floor.indexOf("pg") != -1) && (floor.indexOf("pm") == -1)) && 
+      (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
+       ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
+       ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
+       ((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)))) {
+      console.log(floor);
+      move();
+      console.log(floor);
+      return true;
+    }
+  }
 
 
 
