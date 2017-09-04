@@ -15,31 +15,53 @@
     var floor3 = ["tm"];
     var floor4 = [];    
 
-    function getResult() { 
-      move();
-      
+    function getResult() {       
+      while (floor4.length != 10) {
+        move(floor2, floor1);
+        move(floor3, floor2);
+        move(floor4, floor3);
+
+        if (floor4.length == 10) {
+          console.log(floor4);
+        } else {
+          move(floor3, floor4);
+          move(floor2, floor3);
+          move(floor1, floor2);
+        }        
+      }   
+      return floor4;
     } 
 
-    function bring() {
-      e = floor1.splice(randomInteger(0, floor1.length - 1), randomInteger(1, 2));          
+    function bring(startFloor) {     
+      e = startFloor.splice(randomInteger(0, startFloor.length - 1), randomInteger(1, 2));          
       
       if (e.length == 2) {
         checkCompatibility();
       } 
+      console.log("e: " + e);
       return e;
     }
 
-    function move() {
-      var floor2New = floor2;
-      floor2New.push(bring());
-      floor2New = floor2New.join().split(",");
+    function move(floor, startFloor) {
+      var floorNew = [];
 
-      if (checkCompatibilityOnFloor(floor2New) == true) {        
-        console.log("move");
+      for (var i = 0; i < floor.length; ++i) {
+        if (floor[i] != "") {
+          floorNew.push(floor[i]);
+        }        
+      }
+      
+      floorNew.push(bring(startFloor));      
+      floorNew = floorNew.join().split(",");
+      console.log(floorNew);
 
-      } else {
-        floor2 = floor2New;
-        console.log(floor2New + " = " + floor2);
+      if (checkCompatibilityOnFloor(floorNew) == true) {
+        console.log("move");        
+        move(floor, startFloor);
+
+      } else {       
+        floor = floorNew;
+        console.log(floor);
       }      
     }
 
@@ -104,9 +126,7 @@
        ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
        ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
        ((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)))) {
-      console.log(floor);
-      move();
-      console.log(floor);
+      
       return true;
     }
   }
