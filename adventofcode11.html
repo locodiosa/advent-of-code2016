@@ -9,66 +9,72 @@
       document.getElementById("result").innerHTML = getResult();      
     }  
 
+    var floors = [["sg", "sm", "pg", "pm"], ["tg", "rg", "rm", "cg", "cm"], ["tm"], []];    
     var e = [];      
-    var floor1 = ["sg", "sm", "pg", "pm"];
-    var floor2 = ["tg", "rg", "rm", "cg", "cm"];
-    var floor3 = ["tm"];
-    var floor4 = [];    
-
-    function getResult() {       
-      while (floor4.length != 10) {
-        move(floor2, floor1);
-        move(floor3, floor2);
-        move(floor4, floor3);
-
-        if (floor4.length == 10) {
-          console.log(floor4);
-        } else {
-          move(floor3, floor4);
-          move(floor2, floor3);
-          move(floor1, floor2);
-        }        
-      }   
-      return floor4;
+    
+    function getResult() {                    
+      move(floors[1], floors[0]);      
     } 
 
-    function bring(startFloor) {     
-      e = startFloor.splice(randomInteger(0, startFloor.length - 1), randomInteger(1, 2));          
-      
-      if (e.length == 2) {
-        checkCompatibility();
-      } 
-      console.log("e: " + e);
+    function bring(startFloor) {      
+      for (var i = 0; i < startFloor.length; ++i) {
+        if (checkElevator(startFloor[i], startFloor[i + 1]) == true &&
+            checkCurentFloor() == true &&
+            checkNextFloor() == true) {
+          e.push(startFloor[i], startFloor[i + 1]);         
+        } 
+
+      }
+
       return e;
     }
 
     function move(floor, startFloor) {
       var floorNew = [];
-
-      for (var i = 0; i < floor.length; ++i) {
-        if (floor[i] != "") {
-          floorNew.push(floor[i]);
-        }        
-      }
       
       floorNew.push(bring(startFloor));      
-      floorNew = floorNew.join().split(",");
-      console.log(floorNew);
+      floorNew = floorNew.join().split(",");      
 
-      if (checkCompatibilityOnFloor(floorNew) == true) {
-        console.log("move");        
+      if (checkCompatibilityOnFloor(floorNew) == true ) {           
         move(floor, startFloor);
 
       } else {       
         floor = floorNew;
         console.log(floor);
-      }      
+      } 
+
+      if (floors[3].length == 10) { 
+        return floors[3];
+      } else {                
+        move(floors[2], floors[1]);
+      }    
     }
 
-    function randomInteger(min, max) {
-      var rand = min - 0.5 + Math.random() * (max - min + 1);
-      rand = Math.round(rand);
-      return rand;
+    function checkElevator(elem1, elem2) {
+      if ((elem1 == "tg" && elem2 == "rm") ||
+          (elem1 == "tg" && elem2 == "cm") ||
+          (elem1 == "tg" && elem2 == "sm") ||
+          (elem1 == "tg" && elem2 == "pm") ||
+          (elem1 == "rg" && elem2 == "tm") ||
+          (elem1 == "rg" && elem2 == "cm") ||
+          (elem1 == "rg" && elem2 == "sm") ||
+          (elem1 == "rg" && elem2 == "pm") ||
+          (elem1 == "cg" && elem2 == "rm") ||
+          (elem1 == "cg" && elem2 == "tm") ||
+          (elem1 == "cg" && elem2 == "sm") ||
+          (elem1 == "cg" && elem2 == "pm") ||
+          (elem1 == "sg" && elem2 == "rm") ||
+          (elem1 == "sg" && elem2 == "tm") ||
+          (elem1 == "sg" && elem2 == "cm") ||
+          (elem1 == "sg" && elem2 == "pm") ||
+          (elem1 == "pg" && elem2 == "rm") ||
+          (elem1 == "pg" && elem2 == "tm") ||
+          (elem1 == "pg" && elem2 == "cm") ||
+          (elem1 == "pg" && elem2 == "sm")) {
+        return false;
+      } else {
+        return true;
+      }
     }
 
     function checkCompatibility() {
@@ -91,7 +97,28 @@
           ((e.indexOf("pg") != -1) && (e.indexOf("rm") != -1)) ||
           ((e.indexOf("pg") != -1) && (e.indexOf("tm") != -1)) ||
           ((e.indexOf("pg") != -1) && (e.indexOf("cm") != -1)) ||
-          ((e.indexOf("pg") != -1) && (e.indexOf("sm") != -1))){
+          ((e.indexOf("pg") != -1) && (e.indexOf("sm") != -1)) ||
+
+          ((startFloor.indexOf("tg") != -1) && (startFloor.indexOf("rm") != -1)) ||
+          ((startFloor.indexOf("tg") != -1) && (startFloor.indexOf("cm") != -1)) ||
+          ((startFloor.indexOf("tg") != -1) && (startFloor.indexOf("sm") != -1)) ||
+          ((startFloor.indexOf("tg") != -1) && (startFloor.indexOf("pm") != -1)) ||
+          ((startFloor.indexOf("rg") != -1) && (startFloor.indexOf("tm") != -1)) ||
+          ((startFloor.indexOf("rg") != -1) && (startFloor.indexOf("cm") != -1)) ||
+          ((startFloor.indexOf("rg") != -1) && (startFloor.indexOf("sm") != -1)) ||
+          ((startFloor.indexOf("rg") != -1) && (startFloor.indexOf("pm") != -1)) ||
+          ((startFloor.indexOf("cg") != -1) && (startFloor.indexOf("rm") != -1)) ||
+          ((startFloor.indexOf("cg") != -1) && (startFloor.indexOf("tm") != -1)) ||
+          ((startFloor.indexOf("cg") != -1) && (startFloor.indexOf("sm") != -1)) ||
+          ((startFloor.indexOf("cg") != -1) && (startFloor.indexOf("pm") != -1)) ||
+          ((startFloor.indexOf("sg") != -1) && (startFloor.indexOf("rm") != -1)) ||
+          ((startFloor.indexOf("sg") != -1) && (startFloor.indexOf("tm") != -1)) ||
+          ((startFloor.indexOf("sg") != -1) && (startFloor.indexOf("cm") != -1)) ||
+          ((startFloor.indexOf("sg") != -1) && (startFloor.indexOf("pm") != -1)) ||
+          ((startFloor.indexOf("pg") != -1) && (startFloor.indexOf("rm") != -1)) ||
+          ((startFloor.indexOf("pg") != -1) && (startFloor.indexOf("tm") != -1)) ||
+          ((startFloor.indexOf("pg") != -1) && (startFloor.indexOf("cm") != -1)) ||
+          ((startFloor.indexOf("pg") != -1) && (startFloor.indexOf("sm") != -1))){
         bring();
       }
     }
