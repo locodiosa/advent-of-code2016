@@ -9,44 +9,56 @@
       document.getElementById("result").innerHTML = getResult();      
     }  
 
-    var floors = [["sg", "sm", "pg", "pm"], ["tg", "rg", "rm", "cg", "cm"], ["tm"], []];    
-    var e = [];      
+    var e = [];
+    var floors = [["sg", "sm", "pg", "pm", e], ["tg", "rg", "rm", "cg", "cm"], ["tm"], []];      
     
     function getResult() { 
-      for (var n = 0; n <= 3; ++n) {
-        moveUp(floors[n + 1], floors[n]);
-      }           
+      if (floors[0].indexOf(e) != -1)  {
+        moveUp(floors[1], floors[0]);          
+      }          
     } 
 
     function bring(startFloor) {
       for (var j = 0; j < startFloor.length - 1; ++j) {
         for (var i = j + 1; i < startFloor.length; ++i) {
 
-          if (checkElevator(startFloor[j], startFloor[i]) == true) {
+          if (checkElevator(startFloor[j], startFloor[i]) == true) {            
             var elem1 = startFloor.splice(startFloor[j], 1);
             var elem2 = startFloor.splice(startFloor[i], 1);
+            startFloor.pop();          
 
             if (checkFloor(startFloor) == true) {
-              e.push(startFloor[j], startFloor[i]);               
+              e.push(elem1, elem2);                          
               return e;
-            }                 
+            } else {
+              startFloor.push(elem1, elem2, e);
+            }                            
           } 
-        }
+        }       
       }       
     }
 
-    function moveUp(floor, startFloor) {
-      console.log(floors);
-      var floorNew = [];      
+    function moveUp(floor, startFloor) {                 
+      var floorNew = []; 
+      floorNew.push(floor);     
       floorNew.push(bring(startFloor));            
-      floorNew = floorNew.join().split(",");      
-      
+      floorNew = floorNew.join().split(",");
+
       if (checkFloor(floorNew) == false) {           
         moveUp(floor, startFloor);
 
       } else {       
-        floor = floorNew;        
+        floor = floorNew;
+        e = []; 
+        floor.push(e);
+        console.log(floor);
+        console.log("startFloor: " + startFloor);                        
       } 
+        
+      
+      
+      
+     
 
       if (floors[3].length == 10) { 
         return floors[3];
