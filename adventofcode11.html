@@ -10,59 +10,153 @@
     }  
 
     var e = [];
-    var floors = [["sg", "sm", "pg", "pm", e], ["tg", "rg", "rm", "cg", "cm"], ["tm"], []];      
+    var floors = [["sg", "sm", "pg", "pm", e], ["tg", "rg", "rm", "cg", "cm"], ["tm"], []];  
+
+    var result = 0;    
     
     function getResult() { 
       if (floors[0].indexOf(e) != -1)  {  
         moveUp(floors[1], floors[0]);
+        result += 1;
         console.log("0: " + floors[0]);
         console.log("1: " + floors[1]);
       } 
 
       if ((floors[1].indexOf(e) != -1) && (floors[0].length != 0)) {        
         moveDown(floors[0], floors[1]);
+        result += 1;
         console.log("0: " + floors[0]);
         console.log("1: " + floors[1]);
         moveUp(floors[1], floors[0]);
+        result += 1;
         console.log("0: " + floors[0]);
         console.log("1: " + floors[1]);        
       } 
 
       if ((floors[1].indexOf(e) != -1) && (floors[0].length == 0)) {    
         moveUp(floors[2], floors[1]);
+        result += 1;
         console.log("1: " + floors[1]);
         console.log("2: " + floors[2]);        
       } 
 
       if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
         moveDown(floors[1], floors[2]);
+        result += 1;
         console.log("1: " + floors[1]);
         console.log("2: " + floors[2]);
         moveUp(floors[2], floors[1]);
+        result += 1;
         console.log("1: " + floors[1]);
         console.log("2: " + floors[2]);        
-      }        
+      } 
+
+      if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
+        moveDown(floors[1], floors[2]);
+        result += 1;
+        console.log("1: " + floors[1]);
+        console.log("2: " + floors[2]);
+        moveUp(floors[2], floors[1]);
+        result += 1;
+        console.log("1: " + floors[1]);
+        console.log("2: " + floors[2]);        
+      }  
+
+      if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
+        moveDown(floors[1], floors[2]);
+        result += 1;
+        console.log("1: " + floors[1]);
+        console.log("2: " + floors[2]);
+        moveUp(floors[2], floors[1]);
+        result += 1;
+        console.log("1: " + floors[1]);
+        console.log("2: " + floors[2]);        
+      }  
+
+      if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
+        moveDown(floors[1], floors[2]);
+        result += 1;
+        console.log("1: " + floors[1]);
+        console.log("2: " + floors[2]);
+        moveUp(floors[2], floors[1]);
+        result += 1;
+        console.log("1: " + floors[1]);
+        console.log("2: " + floors[2]);        
+      }
+
+      if ((floors[2].indexOf(e) != -1) && (floors[1].length == 0)) {
+               
+        moveUp(floors[3], floors[2]);
+        result += 1;
+        floors[3].shift(0);
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]); 
+
+        moveDown(floors[2], floors[3]);
+        result += 1;
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);
+        moveUp(floors[3], floors[2]); 
+        result += 1;
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);  
+
+        moveDown(floors[2], floors[3]);
+        result += 1;
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);
+        moveUp(floors[3], floors[2]);
+        result += 1; 
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);  
+
+        moveDown(floors[2], floors[3]);
+        result += 1;
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);
+        moveUp(floors[3], floors[2]);
+        result += 1; 
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);     
+
+        moveDown(floors[2], floors[3]);
+        result += 1;
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);
+        moveUp(floors[3], floors[2]); 
+        result += 1;
+        console.log("2: " + floors[2]);
+        console.log("3: " + floors[3]);         
+      }
+
+      return result;            
     } 
 
     function bring(startFloor) {
-      for (var j = 0; j < startFloor.length - 1; ++j) {       
-        for (var i = j + 1; i < startFloor.length - 2; ++i) {
-        console.log(startFloor[j] + " - " + startFloor[i]);  
-          
-          if (checkElevator(startFloor[j], startFloor[i]) == true) { 
-          console.log(startFloor[j] + " - " + startFloor[i]);
-          console.log(startFloor.indexOf(startFloor[j]) + " - " + startFloor.indexOf(startFloor[i]));                 
-            var elem1 = startFloor.splice(startFloor.indexOf(startFloor[j]), 1);
-            var elem2 = startFloor.splice(startFloor.indexOf(startFloor[i]), 1);            
+      if (startFloor.length == 2) {             
+                        
+        e.push(startFloor[0]);
+        startFloor.splice(0);
+        startFloor.pop();  
+        
+        return e; 
+      }
 
-            console.log("elem1: " + elem1 + ", elem2: " + elem2);
+      for (var j = 0; j < startFloor.length - 2; ++j) {       
+        for (var i = j + 1; i < startFloor.length - 1; ++i) {         
+          
+          if (checkElevator(startFloor[j], startFloor[i]) == true) {           
+            var elem1 = startFloor[j];
+            var elem2 = startFloor[i];
+            startFloor.splice(startFloor[j], 1);
+            startFloor.splice(startFloor.indexOf(elem2), 1);
             startFloor.pop();          
 
             if (checkFloor(startFloor) == true) {
               e.push(elem1, elem2);
-              console.log("e: " + e);
-              console.log("startFloor: " + startFloor);                                
+
               return e;
+
             } else {                    
               startFloor.push(elem1, elem2, e);
             }                            
@@ -92,7 +186,7 @@
       }     
 
       if (floors[3].length == 10) { 
-        return floors[3];
+        return result;
       }      
     }
 
@@ -122,8 +216,7 @@
           (elem2 == "sg" && elem1 == "rm") || (elem2 == "sg" && elem1 == "tm") ||
           (elem2 == "sg" && elem1 == "cm") || (elem2 == "sg" && elem1 == "pm") ||
           (elem2 == "pg" && elem1 == "rm") || (elem2 == "pg" && elem1 == "tm") ||
-          (elem2 == "pg" && elem1 == "cm") || (elem2 == "pg" && elem1 == "sm")) {
-        console.log("фалс");
+          (elem2 == "pg" && elem1 == "cm") || (elem2 == "pg" && elem1 == "sm")) {        
 
         return false;
       } else {
