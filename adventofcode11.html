@@ -7,320 +7,173 @@
     
     function calc() {      
       document.getElementById("result").innerHTML = getResult();      
-    }  
-
-    var e = [];
-    var floors = [["sg", "sm", "pg", "pm", e], ["tg", "rg", "rm", "cg", "cm"], ["tm"], []];  
-
-    var result = 0;    
+    }         
     
-    function getResult() { 
-      if (floors[0].indexOf(e) != -1)  {  
-        moveUp(floors[1], floors[0]);
-        result += 1;
-        console.log("0: " + floors[0]);
-        console.log("1: " + floors[1]);
+    function getResult() {
+      var column = {
+        floors: parseInput(),
+        elevator: 0
+      };
+      
+      var result = 0;
+
+      while (!checkEnd(column.floors)) {
+        doMove(column);           
+        ++result;
       } 
-
-      if ((floors[1].indexOf(e) != -1) && (floors[0].length != 0)) {        
-        moveDown(floors[0], floors[1]);
-        result += 1;
-        console.log("0: " + floors[0]);
-        console.log("1: " + floors[1]);
-        moveUp(floors[1], floors[0]);
-        result += 1;
-        console.log("0: " + floors[0]);
-        console.log("1: " + floors[1]);        
-      } 
-
-      if ((floors[1].indexOf(e) != -1) && (floors[0].length == 0)) {    
-        moveUp(floors[2], floors[1]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);        
-      } 
-
-      if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
-        moveDown(floors[1], floors[2]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);
-        moveUp(floors[2], floors[1]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);        
-      } 
-
-      if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
-        moveDown(floors[1], floors[2]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);
-        moveUp(floors[2], floors[1]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);        
-      }  
-
-      if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
-        moveDown(floors[1], floors[2]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);
-        moveUp(floors[2], floors[1]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);        
-      }  
-
-      if ((floors[2].indexOf(e) != -1) && (floors[1].length != 0)) {        
-        moveDown(floors[1], floors[2]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);
-        moveUp(floors[2], floors[1]);
-        result += 1;
-        console.log("1: " + floors[1]);
-        console.log("2: " + floors[2]);        
-      }
-
-      if ((floors[2].indexOf(e) != -1) && (floors[1].length == 0)) {
-               
-        moveUp(floors[3], floors[2]);
-        result += 1;
-        floors[3].shift(0);
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]); 
-
-        moveDown(floors[2], floors[3]);
-        result += 1;
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);
-        moveUp(floors[3], floors[2]); 
-        result += 1;
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);  
-
-        moveDown(floors[2], floors[3]);
-        result += 1;
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);
-        moveUp(floors[3], floors[2]);
-        result += 1; 
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);  
-
-        moveDown(floors[2], floors[3]);
-        result += 1;
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);
-        moveUp(floors[3], floors[2]);
-        result += 1; 
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);     
-
-        moveDown(floors[2], floors[3]);
-        result += 1;
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);
-        moveUp(floors[3], floors[2]); 
-        result += 1;
-        console.log("2: " + floors[2]);
-        console.log("3: " + floors[3]);         
-      }
 
       return result;            
+    }
+
+    function parseInput() {
+      var floors = [];
+
+      input.split("\n").forEach(function(line) {       
+        var floor = [];
+
+        line.split(" a ").forEach(function(str) {
+          if (str.indexOf("floor ") == -1) {                 
+            floor.push(createObject(str));            
+          }                    
+        });
+
+        floors.push(floor);        
+      });   
+
+      return floors;
     } 
 
-    function bring(startFloor) {
-      if (startFloor.length == 2) {             
-                        
-        e.push(startFloor[0]);
-        startFloor.splice(0);
-        startFloor.pop();  
-        
-        return e; 
-      }
 
-      for (var j = 0; j < startFloor.length - 2; ++j) {       
-        for (var i = j + 1; i < startFloor.length - 1; ++i) {         
-          
-          if (checkElevator(startFloor[j], startFloor[i]) == true) {           
-            var elem1 = startFloor[j];
-            var elem2 = startFloor[i];
-            startFloor.splice(startFloor[j], 1);
-            startFloor.splice(startFloor.indexOf(elem2), 1);
-            startFloor.pop();          
+    function createObject(str) {
+      if (str.indexOf("microchip") != -1) {
+        return {
+          name: str.slice(0, str.indexOf("-")),
+          type:"microchip"          
+        };
 
-            if (checkFloor(startFloor) == true) {
-              e.push(elem1, elem2);
-
-              return e;
-
-            } else {                    
-              startFloor.push(elem1, elem2, e);
-            }                            
-          } 
-        }       
-      }       
-    }
-
-    function bringDown(startFloor) {
-      if (startFloor.length == 2) {             
-                        
-        e.push(startFloor[0]);
-        startFloor.splice(0);
-        startFloor.pop();  
-        
-        return e; 
-      }
-
-      /*
-
-      for (var j = 0; j < startFloor.length - 2; ++j) {       
-        for (var i = j + 1; i < startFloor.length - 1; ++i) {         
-          
-          if (checkElevator(startFloor[j], startFloor[i]) == true) {           
-            var elem1 = startFloor[j];
-            var elem2 = startFloor[i];
-            startFloor.splice(startFloor[j], 1);
-            startFloor.splice(startFloor.indexOf(elem2), 1);
-            startFloor.pop();          
-
-            if (checkFloor(startFloor) == true) {
-              e.push(elem1, elem2);
-
-              return e;
-
-            } else {                    
-              startFloor.push(elem1, elem2, e);
-            }                            
-          } 
-        }       
-      }   
-      */    
-    }
-
-    function moveUp(floor, startFloor) {                 
-      var floorNew = [];       
-      floorNew.push(floor);     
-      floorNew.push(bring(startFloor));         
-      floorNew = floorNew.join().split(",");
-
-      if (checkFloor(floorNew) == false) {           
-        moveUp(floor, startFloor);
-
-      } else {       
-        floor.length = 0;
-
-        for (var i = 0; i < floorNew.length; ++i) {
-          floor.push(floorNew[i]);
-        }   
-
-        e = []; 
-        floor.push(e);                            
+      } else if (str.indexOf("generator") != -1) {
+        return {
+          name: str.slice(0, str.indexOf(" ")),
+          type: "generator"
+        };
       }     
 
-      if (floors[3].length == 10) { 
-        return result;
-      }      
+      return null;
     }
 
-    function moveDown(floor, startFloor) {                 
-      var floorNew = [];       
-      floorNew.push(floor);     
-      floorNew.push(bring(startFloor));         
-      floorNew = floorNew.join().split(",");
-
-      if (checkFloor(floorNew) == false) {           
-        moveDown(floor, startFloor);
-
-      } else {       
-        floor.length = 0;
-
-        for (var i = 0; i < floorNew.length; ++i) {
-          floor.push(floorNew[i]);
-        }   
-
-        e = []; 
-        floor.push(e);                            
-      }     
-
-      if (floors[3].length == 10) { 
-        return result;
-      }   
-      
-    }
-
-    function checkElevator(elem1, elem2) {
-      if ((elem1 == "tg" && elem2 == "rm") || (elem1 == "tg" && elem2 == "cm") ||
-          (elem1 == "tg" && elem2 == "sm") || (elem1 == "tg" && elem2 == "pm") ||
-          (elem1 == "rg" && elem2 == "tm") || (elem1 == "rg" && elem2 == "cm") ||
-          (elem1 == "rg" && elem2 == "sm") || (elem1 == "rg" && elem2 == "pm") ||
-          (elem1 == "cg" && elem2 == "rm") || (elem1 == "cg" && elem2 == "tm") ||
-          (elem1 == "cg" && elem2 == "sm") || (elem1 == "cg" && elem2 == "pm") ||
-          (elem1 == "sg" && elem2 == "rm") || (elem1 == "sg" && elem2 == "tm") ||
-          (elem1 == "sg" && elem2 == "cm") || (elem1 == "sg" && elem2 == "pm") ||
-          (elem1 == "pg" && elem2 == "rm") || (elem1 == "pg" && elem2 == "tm") ||
-          (elem1 == "pg" && elem2 == "cm") || (elem1 == "pg" && elem2 == "sm") ||
-
-          (elem2 == "tg" && elem1 == "rm") || (elem2 == "tg" && elem1 == "cm") ||
-          (elem2 == "tg" && elem1 == "sm") || (elem2 == "tg" && elem1 == "pm") ||
-          (elem2 == "rg" && elem1 == "tm") || (elem2 == "rg" && elem1 == "cm") ||
-          (elem2 == "rg" && elem1 == "sm") || (elem2 == "rg" && elem1 == "pm") ||
-          (elem2 == "cg" && elem1 == "rm") || (elem2 == "cg" && elem1 == "tm") ||
-          (elem2 == "cg" && elem1 == "sm") || (elem2 == "cg" && elem1 == "pm") ||
-          (elem2 == "sg" && elem1 == "rm") || (elem2 == "sg" && elem1 == "tm") ||
-          (elem2 == "sg" && elem1 == "cm") || (elem2 == "sg" && elem1 == "pm") ||
-          (elem2 == "pg" && elem1 == "rm") || (elem2 == "pg" && elem1 == "tm") ||
-          (elem2 == "pg" && elem1 == "cm") || (elem2 == "pg" && elem1 == "sm")) {        
-
-        return false;
+    function doMove(column) {      
+      if ((column.elevator == 0) || (column.floors[column.elevator - 1].length == 0)) {
+        doMoveUp(column);
       } else {
-        return true;
+        doMoveDown(column);
       }
-    }   
+    }
+
+    function doMoveUp(column) {
+      for (var j = 0; j < column.floors[column.elevator].length - 1; ++j) {       
+        for (var i = j + 1; i < column.floors[column.elevator].length; ++i) {         
+           
+          if (checkElevator(column.floors[column.elevator][j], column.floors[column.elevator][i]) == true) {            
+            var newCurrentFloor = [];
+            var newNextFloor = column.floors[column.elevator + 1];
+            
+            for (var k = 0; k < column.floors[column.elevator].length; ++k) {
+              if (k != j && k != i) {
+                newCurrentFloor.push(column.floors[column.elevator][k]);
+              } else {
+                newNextFloor.push(column.floors[column.elevator][k]);
+              }
+            }                           
+ 
+            if ((checkFloor(newCurrentFloor) == true) && (checkFloor(newNextFloor) == true)) { 
+              column.floors[column.elevator] = newCurrentFloor;
+              column.floors[column.elevator + 1] = newNextFloor;              
+              column.elevator++;
+
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    function doMoveDown(column) {
+      for (var j = 0; j < column.floors[column.elevator].length - 1; ++j) { 
+        var newCurrentFloor = [];
+        var newNextFloor = column.floors[column.elevator - 1];
+
+        for (var k = 0; k < column.floors[column.elevator].length; ++k) {
+          if (k != j) {            
+            newCurrentFloor.push(column.floors[column.elevator][k]);
+          
+          } else {                   
+            newNextFloor.push(column.floors[column.elevator - 1][k]);
+          }
+        }                               
+ 
+        if ((checkFloor(newCurrentFloor) == true) && (checkFloor(newNextFloor) == true)) { 
+          column.floors[column.elevator] = newCurrentFloor;
+          column.floors[column.elevator - 1] = newNextFloor;
+          column.elevator--;
+
+          return true;
+
+        } else {
+          newNextFloor.pop();
+        }          
+      }
+    }
+
+    function checkElevator(j, i) {
+      if ((j.name == i.name) || (j.type == i.type)) {
+        
+        return true;
+      
+      } else {
+        
+        return false;
+      }
+    }
 
     function checkFloor(floor) {
-      if (((floor.indexOf("tg") != -1) && (floor.indexOf("tm") == -1)) && 
-        (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
-         ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
-         ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
-         ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
+      var aloneObjects = [];
 
-        ((floor.indexOf("rg") != -1) && (floor.indexOf("rm") == -1)) && 
-        (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
-         ((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)) || 
-         ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
-         ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
+      for (var j = 0; j < floor.length; ++j) {       
+        for (var i = 0; i < floor.length; ++i) {
 
-        ((floor.indexOf("cg") != -1) && (floor.indexOf("cm") == -1)) && 
-        (((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)) || 
-         ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
-         ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
-         ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
+          if (floor[j].name != floor[i].name) {
+            aloneObjects.push(floor[j]);
+          }
+        }
+      }
 
-        ((floor.indexOf("sg") != -1) && (floor.indexOf("sm") == -1)) && 
-        (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
-         ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
-         ((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)) || 
-         ((floor.indexOf("pm") != -1) && (floor.indexOf("pg") == -1))) ||
-
-        ((floor.indexOf("pg") != -1) && (floor.indexOf("pm") == -1)) && 
-        (((floor.indexOf("cm") != -1) && (floor.indexOf("cg") == -1)) || 
-         ((floor.indexOf("rm") != -1) && (floor.indexOf("rg") == -1)) || 
-         ((floor.indexOf("sm") != -1) && (floor.indexOf("sg") == -1)) || 
-         ((floor.indexOf("tm") != -1) && (floor.indexOf("tg") == -1)))) {
-
-        return false;
+      if ((aloneObjects.length == 0) || (aloneObjects.length == 1)) {
+        return true;
 
       } else {
-        return true;
-      }      
+        for (var j = 0; j < aloneObjects.length - 1; ++j) {
+          if (aloneObjects[j].type == aloneObjects[j + 1].type) {
+            
+            return true;
+
+          } else {
+
+            return false;
+          }
+        }
+      }
     }
 
+    function checkEnd(floors) {
+      for (var i = 0; i < floors.length - 1; ++i) {
+        if (floors[i].length != 0) {
 
+          return false;
+        }
+      }
 
+      return true;
+    }
 
   var input = `The first floor contains a strontium generator, a strontium-compatible microchip, a plutonium generator, and a plutonium-compatible microchip.
 The second floor contains a thulium generator, a ruthenium generator, a ruthenium-compatible microchip, a curium generator, and a curium-compatible microchip.
