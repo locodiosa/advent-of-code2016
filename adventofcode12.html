@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+    
+    function calc() {      
+      document.getElementById("result").innerHTML = 
+        getResult({
+          a: 0,
+          b: 0,
+          c: 0,
+          d: 0
+        }) + ", " + 
+        getResult({
+          a: 0,
+          b: 0,
+          c: 1,
+          d: 0
+        })    
+    } 
+
+    var regs = null;       
+    
+    function getResult(initialRegs) {
+      regs = initialRegs;
+      var code = getCode();    
+
+      for (var i = 0; i < code.length; i = parseCode(code, i)) {   
+      }
+
+      return regs.a;
+    }    
+
+    function parseCode(code, i) {             
+      var instruction = code[i].split(" ");      
+      var next = i + 1;
+
+      switch (instruction[0]) {
+        case "cpy":
+          if (isNumeric(instruction[1])) {
+            regs[instruction[2]] = +instruction[1];
+          } else {
+            regs[instruction[2]] = regs[instruction[1]];
+          }
+          break;
+
+        case "inc":
+          ++regs[instruction[1]];
+          break;
+
+        case "dec":
+          --regs[instruction[1]];
+          break;
+
+        case "jnz":
+          if ((isNumeric(instruction[1]) && +instruction[1] != 0) ||
+             (!isNumeric(instruction[1]) && regs[instruction[1]] != 0)) {
+            next = i + +instruction[2];            
+          }
+          break;  
+      }         
+     
+      return next;
+    }     
+
+    function getCode() {
+      var code = [];
+      input.split("\n").forEach(function(line) {
+        code.push(line);
+      });
+
+      return code;
+    }  
+
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }  
+
+  var input = `cpy 1 a
+cpy 1 b
+cpy 26 d
+jnz c 2
+jnz 1 5
+cpy 7 c
+inc d
+dec c
+jnz c -2
+cpy a c
+inc a
+dec b
+jnz b -2
+cpy c b
+dec d
+jnz d -6
+cpy 13 c
+cpy 14 d
+inc a
+dec d
+jnz d -2
+dec c
+jnz c -5`;
+
+	</script>
+</head>
+<body onload="calc()">
+  <div id="result"></div>
+</body>
+</html>
