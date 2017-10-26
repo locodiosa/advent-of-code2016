@@ -75,7 +75,11 @@
            
           if (checkElevator(column.floors[column.elevator][j], column.floors[column.elevator][i]) == true) {            
             var newCurrentFloor = [];
-            var newNextFloor = column.floors[column.elevator + 1];
+            var newNextFloor = [];
+
+            for (var n = 0; n < column.floors[column.elevator + 1].length; ++n) {
+              newNextFloor.push(column.floors[column.elevator + 1][n]);
+            }            
             
             for (var k = 0; k < column.floors[column.elevator].length; ++k) {
               if (k != j && k != i) {
