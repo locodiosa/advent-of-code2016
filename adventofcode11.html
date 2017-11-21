@@ -5,9 +5,66 @@
 	<script>
 		"use strict";
     
-    function calc() {      
+    function calc() {  
+
+      console.log(checkFloorTest(
+        true,
+        [{name: "strontium", type: "generator"}]));
+
+      console.log(checkFloorTest(
+        true, 
+        [{name: "strontium", type: "generator"},
+         {name: "strontium", type: "microchip"}]));
+
+      console.log(checkFloorTest(
+        true,
+        [{name: "strontium", type: "generator"}, 
+         {name: "strontium", type: "microchip"},
+         {name: "thulium", type: "generator"}]));
+
+      console.log(checkFloorTest(
+        true,
+        [{name: "strontium", type: "generator"}, 
+         {name: "strontium", type: "microchip"},
+         {name: "curium", type: "microchip"}])); 
+
+      console.log(checkFloorTest(
+        false,
+        [{name: "strontium", type: "generator"}, 
+         {name: "strontium", type: "microchip"},
+         {name: "thulium", type: "generator"},
+         {name: "curium", type: "microchip"}]));
+
+      console.log(checkFloorTest(
+        true,
+        [{name: "strontium", type: "generator"}, 
+         {name: "strontium", type: "microchip"},
+         {name: "thulium", type: "generator"},
+         {name: "curium", type: "microchip"},
+         {name: "curium", type: "generator"},
+         {name: "plutonium", type: "generator"},
+         {name: "ruthenium", type: "generator"},
+         {name: "thulium", type: "microchip"},
+         {name: "plutonium", type: "microchip"},
+         {name: "ruthenium", type: "microchip"}]));
+
+      console.log(checkFloorTest(
+        false,
+        [{name: "strontium", type: "generator"}, 
+         {name: "strontium", type: "microchip"},
+         {name: "thulium", type: "generator"},
+         {name: "curium", type: "microchip"},
+         {name: "curium", type: "generator"},
+         {name: "plutonium", type: "generator"},
+         {name: "plutonium", type: "microchip"},
+         {name: "ruthenium", type: "microchip"}]));
+
       document.getElementById("result").innerHTML = getResult(input) + ", " + getResult(input2);      
-    }         
+    }   
+
+    function checkFloorTest(result, floor) {
+      return (checkFloor(floor) == result) ? "passed" : "failed"; 
+    }      
     
     function getResult(input) {
       var column = {
@@ -139,32 +196,33 @@
       }
     }
 
-    function checkFloor(floor) {
-      var aloneObjects = [];
+    function checkFloor(floor) { 
+      var aloneObjects = []; 
 
-      for (var j = 0; j < floor.length; ++j) {       
-        for (var i = 0; i < floor.length; ++i) {
+      for (var i = 0; i < floor.length; ++i) {
+        var counterOfPair = 0;
 
-          if (floor[j].name != floor[i].name) {
-            aloneObjects.push(floor[j]);
+        for (var j = 0; j < floor.length; ++j) {  
+          if ((j != i) && (floor[i].name == floor[j].name)) {
+            counterOfPair = 1;
           }
+        }
+
+        if (counterOfPair == 0) {
+          aloneObjects.push(floor[i]);
         }
       }
 
-      if ((aloneObjects.length == 0) || (aloneObjects.length == 1)) {
+      if (aloneObjects.length == 0 || aloneObjects.length == 1) {
         return true;
-
       } else {
-        for (var j = 0; j < aloneObjects.length - 1; ++j) {
-          if (aloneObjects[j].type == aloneObjects[j + 1].type) {
-            
-            return true;
+        var equal = true;
 
-          } else {
-
-            return false;
-          }
+        for (var k = 0; k < aloneObjects.length - 1; ++k) {          
+          equal = equal && aloneObjects[k].type == aloneObjects[k + 1].type;
         }
+
+        return equal;
       }
     }
 
