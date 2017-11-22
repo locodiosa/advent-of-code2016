@@ -59,6 +59,13 @@
          {name: "plutonium", type: "microchip"},
          {name: "ruthenium", type: "microchip"}]));
 
+      console.log(checkFloorTest(
+        false,
+        [{name: "strontium", type: "generator"},         
+         {name: "thulium", type: "generator"},
+         {name: "curium", type: "generator"},         
+         {name: "ruthenium", type: "microchip"}]));
+
       document.getElementById("result").innerHTML = getResult(input) + ", " + getResult(input2);      
     }   
 
@@ -215,14 +222,15 @@
 
       if (aloneObjects.length == 0 || aloneObjects.length == 1) {
         return true;
-      } else {
-        var equal = true;
+      } else {        
 
         for (var k = 0; k < aloneObjects.length - 1; ++k) {          
-          equal = equal && aloneObjects[k].type == aloneObjects[k + 1].type;
+          if (aloneObjects[k].type != aloneObjects[k + 1].type) {
+            return false;
+          }
         }
 
-        return equal;
+        return true;
       }
     }
 
