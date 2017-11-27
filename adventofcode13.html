@@ -6,28 +6,42 @@
 		"use strict";
     
     function calc() {
-      document.getElementById("result").innerHTML = getResult();      
+      document.getElementById("result").innerHTML = getResult1() + ", " + getResult2();      
     } 
-
+    
     var currentWave = [{x: 31, y: 39}];
+    var startWave = [{x: 1, y: 1}];
+    var numberOfLocations = 1; 
 
-    function getResult() {      
-      var building = generateBuilding();      
+    function getResult1() { 
+      var building = generateBuilding();           
       var numberOfWave = 0;
       building[39][31] = 1;
       
       while (building[1][1] == 0) {        
-        numberOfWave = doWave(numberOfWave, building);
+        numberOfWave = doWave1(numberOfWave, building);
       }
 
       return numberOfWave;
     }
 
-    function doWave(numberOfWave, building) {
+    function getResult2() {
+      var building = generateBuilding(); 
+      var numberOfWave = 0;
+      building[1][1] = 1;      
+
+      while (numberOfWave < 50) {
+        numberOfWave = doWave2(numberOfWave, building);
+      }
+
+      return numberOfLocations;
+    }
+
+    function doWave1(numberOfWave, building) {
       var newWave = [];     
 
       currentWave.forEach(function(cell) {             
-        if ((cell.y - 1 > 0) && (building[cell.y - 1][cell.x] == 0)) {
+        if ((cell.y - 1 >= 0) && (building[cell.y - 1][cell.x] == 0)) {
           building[cell.y - 1][cell.x] = building[cell.y][cell.x] + 1;
           newWave.push({x: cell.x, y: cell.y - 1});
         }
@@ -37,7 +51,7 @@
           newWave.push({x: cell.x, y: cell.y + 1});
         }
 
-        if ((cell.x - 1 > 0) && (building[cell.y][cell.x - 1] == 0)) {
+        if ((cell.x - 1 >= 0) && (building[cell.y][cell.x - 1] == 0)) {
           building[cell.y][cell.x - 1] = building[cell.y][cell.x] + 1;
           newWave.push({x: cell.x - 1, y: cell.y});
         }
@@ -50,6 +64,40 @@
 
       currentWave = newWave;     
 
+      return numberOfWave + 1;
+    }
+
+    function doWave2(numberOfWave, building) {
+      var newWave = [];
+      
+      startWave.forEach(function(cell) {             
+        if ((cell.y - 1 >= 0) && (building[cell.y - 1][cell.x] == 0)) {
+          building[cell.y - 1][cell.x] = building[cell.y][cell.x] + 1;
+          newWave.push({x: cell.x, y: cell.y - 1});
+          ++numberOfLocations;
+        }
+
+        if ((cell.y + 1 < building.length) && (building[cell.y + 1][cell.x] == 0)) {
+          building[cell.y + 1][cell.x] = building[cell.y][cell.x] + 1;
+          newWave.push({x: cell.x, y: cell.y + 1});
+          ++numberOfLocations;
+        }
+
+        if ((cell.x - 1 >= 0) && (building[cell.y][cell.x - 1] == 0)) {
+          building[cell.y][cell.x - 1] = building[cell.y][cell.x] + 1;
+          newWave.push({x: cell.x - 1, y: cell.y});
+          ++numberOfLocations;
+        }
+
+        if ((cell.x + 1 < building[cell.y].length) && (building[cell.y][cell.x + 1] == 0)) {
+          building[cell.y][cell.x + 1] = building[cell.y][cell.x] + 1;
+          newWave.push({x: cell.x + 1, y: cell.y});
+          ++numberOfLocations;
+        }
+      });
+
+      startWave = newWave;     
+     
       return numberOfWave + 1;
     }
 
