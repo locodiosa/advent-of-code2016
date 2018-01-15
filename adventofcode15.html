@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+     
+    function calc() {
+      document.getElementById("result").innerHTML = 
+        getResult(getDiscs()) + ", " + getResult(getDiscs([11, 0]));
+    }
+
+    function getResult(discs) {    
+
+      let startTime = 0;
+      let pos = 0;    
+      
+      while (true) {
+        let time = startTime;
+
+        for (let i = 0; i < discs.length && pos == 0; ++i) {
+          ++time;
+          pos = (discs[i][1] + time) % discs[i][0];
+        }
+
+        if (pos == 0) {
+          return startTime;
+        } else {
+          ++startTime;
+          pos = 0;
+        }         
+      }          
+    }
+
+    function getDiscs(newDisc) {
+      let discs = [];
+
+      input.split("\n").forEach(line => {
+        discs.push([+line.slice(line.indexOf("has ") + 4, line.indexOf(" positions")), 
+                    +line.slice(line.indexOf("position ") + 9, line.indexOf("."))]);
+      });
+
+      if (newDisc != undefined) {
+        discs.push(newDisc);
+      }
+
+      return discs;
+    }
+
+    const input = `Disc #1 has 13 positions; at time=0, it is at position 11.
+Disc #2 has 5 positions; at time=0, it is at position 0.
+Disc #3 has 17 positions; at time=0, it is at position 11.
+Disc #4 has 3 positions; at time=0, it is at position 0.
+Disc #5 has 7 positions; at time=0, it is at position 2.
+Disc #6 has 19 positions; at time=0, it is at position 17.`;
+    
+	</script>
+</head>
+
+<body onload="calc()">
+  <div id="result"></div>
+</body>
+
+</html>
