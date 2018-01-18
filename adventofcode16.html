@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+     
+    function calc() {
+      document.getElementById("result").innerHTML = getResult();
+    }
+
+    function getResult() {
+      const maxLength = 272;
+      
+      let state = input.split("");
+
+      while (state.length < maxLength) {        
+        let copy = [...state].reverse().map(e => (e == "0") ? "1" : "0");
+        state.push("0", ...copy);
+      }
+
+      state.length = maxLength;
+
+      let checksum;
+
+      do {
+        checksum = [];
+
+        for (let i = 0; i < state.length - 1; i += 2) {          
+          checksum.push((state[i] == state[i + 1]) ? "1" : "0");
+        }
+
+        state = [...checksum];        
+      } while (checksum.length % 2 == 0);
+
+      return checksum.join("");
+    }    
+
+    const input = "11110010111001001";
+     
+	</script>
+</head>
+
+<body onload="calc()">
+  <div id="result"></div>
+</body>
+
+</html>
