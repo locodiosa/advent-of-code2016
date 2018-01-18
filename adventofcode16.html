@@ -6,17 +6,16 @@
 		"use strict";
      
     function calc() {
-      document.getElementById("result").innerHTML = getResult();
+      document.getElementById("result").innerHTML = getResult(272) + ", " + getResult(35651584);
     }
 
-    function getResult() {
-      const maxLength = 272;
-      
+    function getResult(maxLength) {      
       let state = input.split("");
 
       while (state.length < maxLength) {        
-        let copy = [...state].reverse().map(e => (e == "0") ? "1" : "0");
-        state.push("0", ...copy);
+        let copy = state.slice().reverse().map(e => (e == "0") ? "1" : "0");        
+        let newState = state.join("") + "0" + copy.join("");
+        state = newState.split("");
       }
 
       state.length = maxLength;
@@ -36,7 +35,7 @@
       return checksum.join("");
     }    
 
-    const input = "11110010111001001";
+    const input = "11110010111001001";   
      
 	</script>
 </head>
