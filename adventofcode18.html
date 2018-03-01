@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+      
+    function calc() {
+      document.getElementById("result").innerHTML = getResult(40) + ", " + getResult(400000);
+    }
+
+    function getResult(numberOfRows) {
+      let row = [];     
+
+      for (let i = 0; i < numberOfRows; ++i) {
+        if (i == 0) {
+          row[i] = input.split("");          
+
+        } else {
+          row[i] = [];
+
+          for (let j = 0; j < row[i - 1].length; ++j) {
+            if (j == 0) {
+              if (row[i - 1][j + 1] == "^") {
+                row[i][j] = "^";
+              } else {
+                row[i][j] = ".";
+              }
+
+            } else if (j == row[i - 1].length - 1) {
+              if (row[i - 1][j - 1] == "^") {
+                row[i][j] = "^";
+              } else {
+                row[i][j] = ".";
+              }
+            
+            } else {
+              if (row[i - 1][j] == "^") {
+                if ((row[i - 1][j - 1] == "^" && row[i - 1][j + 1] == ".") 
+                    || (row[i - 1][j - 1] == "." && row[i - 1][j + 1] == "^")) {
+                  row[i][j] = "^";
+                } else {
+                  row[i][j] = ".";
+                }
+
+              } else {
+                if ((row[i - 1][j - 1] == "^" && row[i - 1][j + 1] == ".") 
+                    || (row[i - 1][j - 1] == "." && row[i - 1][j + 1] == "^")) {
+                  row[i][j] = "^";
+                } else {
+                  row[i][j] = ".";
+                }
+              }
+            }
+          }
+        }        
+      }     
+
+      let safeTiles = 0; 
+
+      for (let i = 0; i < row.length; ++i) {
+        for (let j = 0; j < row[i].length; ++j) {
+          if (row[i][j] == ".") {
+            ++safeTiles;
+          }
+        }
+      }
+
+      return safeTiles;
+    }  
+  
+    const input = "^..^^.^^^..^^.^...^^^^^....^.^..^^^.^.^.^^...^.^.^.^.^^.....^.^^.^.^.^.^.^.^^..^^^^^...^.....^....^.";     
+     
+	</script>
+</head>
+
+<body onload="calc()">
+  <div id="result"></div>
+</body>
+
+</html>
