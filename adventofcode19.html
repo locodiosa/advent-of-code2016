@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script>
+		"use strict";
+      
+    function calc() {
+      document.getElementById("result").innerHTML = getResult() + ", " + getResult2();
+    }
+
+    function getResult() {
+      console.log(getNumberPow(2));
+      let circle = [];
+
+      for (let i = 0; i < input; ++i) {
+        circle[i] = 1;
+      }
+
+      for (let p = 0; p < getNumberPow(2); ++p) {  
+        for (let i = 0; i < circle.length; ++i) {
+          
+          if (circle[i % circle.length] != 0) {
+
+            if (i + Math.pow(2, p) < circle.length) {
+              circle[(i + Math.pow(2, p)) % circle.length] = 0;
+            
+            } else {              
+              for (let j = 0; j < i; ++j) {
+
+                if (circle[j] != 0) {
+                  circle[j] = 0;
+                  break;
+                }
+              }
+            }            
+          }
+        }
+      }
+
+      for (let i = 0; i < circle.length; ++i) {
+        if (circle[i] != 0) {
+          return i + 1;
+        }
+      }         
+    }     
+
+    function getResult2() {
+      let result = getPow(3) - ((getPow(3) * 2) - input);
+      return result;
+    }
+
+    function getNumberPow(n) {
+      let pow = 0;
+      let res = 0;
+      
+      for (let p = 0; pow < input; ++p) {        
+        pow = Math.pow(n, p);
+
+        if (pow <= input) {
+          res = p;
+        }
+      }
+
+      return res;   
+    }
+
+    function getPow(n) {
+      let pow = 0;
+      let res = 0;
+      
+      for (let p = 0; pow < input; ++p) {        
+        pow = Math.pow(n, p);
+
+        if (pow <= input) {
+          res = pow;
+        }
+      }
+
+      return res;      
+    }
+
+    function test() {
+      for (let n = 1; n < 100; ++n) {
+        let circle = [];
+
+        for (let i = 0; i < n; ++i) { ///n -> input
+          circle[i] = i + 1;
+        }
+
+        for (let i = 0; circle.length > 1;) {
+          let j = circle[i];
+          circle.splice(((i + Math.floor(circle.length / 2)) % circle.length), 1);
+          i = (circle.indexOf(j) + 1) % circle.length;        
+        } 
+
+        console.log(n + ": " + circle);
+      }
+      
+    }
+  
+    const input = 3012210;    
+     
+	</script>
+</head>
+
+<body onload="calc()">
+  <div id="result"></div>
+</body>
+
+</html>
